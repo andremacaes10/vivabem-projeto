@@ -1,0 +1,35 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.card {
+    transition: all 0.3s ease;
+    transform-style: preserve-3d;
+    perspective: 1000px;
+    border-radius: 0.5rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.card.flipped {
+    background-color: #f3e8ff; /* Tailwind's purple-100 */
+    color: #6b21a8; /* Tailwind's purple-800 */
+    transform: rotateY(180deg);
+}
+
+.card:not(.flipped):hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+    #game-board {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 0.5rem;
+    }
+    
+    .card {
+        height: 4.5rem;
+        font-size: 1.8rem;
+    }
+}

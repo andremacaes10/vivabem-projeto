@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Contacte-nos | Viva Bem+</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"/>
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans">
+  <!-- Header -->
+  <header class="bg-white shadow-md">
+    <nav class="container mx-auto px-4 py-4 flex justify-between items-center">
+      <a href="mainpage.html" class="text-2xl font-bold text-purple-600">Viva Bem+</a>
+      <div class="space-x-6">
+        <a href="mainpage.html" class="text-gray-700 hover:text-purple-600 font-medium">Página Inicial</a>
+        <a href="features.html" class="text-gray-700 hover:text-purple-600 font-medium">Funcionalidades</a>
+        <a href="about.html" class="text-gray-700 hover:text-purple-600 font-medium">Sobre Nós</a>
+        <a href="contact.html" class="text-gray-700 hover:text-purple-600 font-medium">Contacte-nos</a>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Main Content -->
+  <main class="container mx-auto px-4 py-16">
+    <div class="bg-white shadow-lg rounded-2xl overflow-hidden grid grid-cols-1 md:grid-cols-2">
+      <!-- Left -->
+      <div class="bg-purple-600 text-white p-8 flex flex-col justify-center">
+        <h2 class="text-3xl font-bold mb-4">Fale connosco</h2>
+        <p class="text-lg mb-6">Estamos prontos para responder às tuas dúvidas.</p>
+        <ul class="space-y-4">
+          <li class="flex items-center">📧 suporte@myapp.com</li>
+          <li class="flex items-center">📞 +351 912 345 678</li>
+          <li class="flex items-center">🕒 Segunda a Sexta: 9h - 18h</li>
+        </ul>
+      </div>
+
+      <!-- Right: Contact Form -->
+      <div class="p-8">
+        <h3 class="text-2xl font-semibold mb-4 text-purple-600">Formulário de Contacto</h3>
+        <form id="contactForm" class="space-y-5">
+          <div>
+            <label for="name" class="block font-medium mb-1">Nome</label>
+            <input type="text" id="name" name="name" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-purple-500" required>
+          </div>
+          <div>
+            <label for="email" class="block font-medium mb-1">Email</label>
+            <input type="email" id="email" name="email" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-purple-500" required>
+          </div>
+          <div>
+            <label for="message" class="block font-medium mb-1">Mensagem</label>
+            <textarea id="message" name="message" rows="4" class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-purple-500" required></textarea>
+          </div>
+          <button type="submit" class="w-full bg-purple-600 text-white font-semibold py-2 rounded-lg hover:bg-purple-700 transition">Enviar</button>
+        </form>
+      </div>
+    </div>
+  </main>
+
+  <!-- Firebase SDK -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
+    import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBMwJEeBE1tfT-wVPJ8c2lSlEmuqYEuqnY",
+      authDomain: "projeto-final-de-curso-425a9.firebaseapp.com",
+      projectId: "projeto-final-de-curso-425a9",
+      storageBucket: "projeto-final-de-curso-425a9.appspot.com",
+      messagingSenderId: "475780755633",
+      appId: "1:475780755633:web:6dbf97c6b394134e91f290",
+      measurementId: "G-DZ3DNKYQP5"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    const form = document.getElementById("contactForm");
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const name = form.name.value;
+      const email = form.email.value;
+      const message = form.message.value;
+
+      try {
+        await addDoc(collection(db, "mensagensContacto"), {
+          nome: name,
+          email: email,
+          mensagem: message,
+          timestamp: serverTimestamp()
+        });
+
+        alert("Mensagem enviada com sucesso!");
+        form.reset();
+      } catch (error) {
+        alert("Erro ao enviar: " + error.message);
+      }
+    });
+  </script>
+</body>
+</html>

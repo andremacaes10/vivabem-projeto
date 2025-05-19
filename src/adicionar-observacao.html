@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Adicionar Observação</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 min-h-screen p-6">
+  <div class="max-w-2xl mx-auto">
+    <h1 class="text-2xl font-bold text-gray-800 mb-6">Adicionar Observação</h1>
+    <form id="obsForm" class="bg-white p-6 rounded shadow space-y-4">
+      <textarea id="textoObs" rows="6" placeholder="Escreva a observação..." class="w-full border rounded px-3 py-2"></textarea>
+      <button type="submit" class="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700">Guardar Observação</button>
+      <div id="msgSucesso" class="text-green-600 font-semibold hidden">Observação guardada com sucesso.</div>
+    </form>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
+    import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBMwJEeBE1tfT-wVPJ8c2lSlEmuqYEuqnY",
+      authDomain: "projeto-final-de-curso-425a9.firebaseapp.com",
+      projectId: "projeto-final-de-curso-425a9"
+    };
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    const params = new URLSearchParams(window.location.search);
+    const uid = params.get("uid");
+
+    const form = document.getElementById("obsForm");
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const texto = document.getElementById("textoObs").value.trim();
+      if (!texto) return;
+
+      await addDoc(collection(db, "observacoes"), {
+        pacienteId: uid,
+        texto: texto,
+        data: serverTimestamp()
+      });
+
+      document.getElementById("msgSucesso").classList.remove("hidden");
+      form.reset();
+    });
+  </script>
+</body>
+</html>

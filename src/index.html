@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Viva Bem+</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .mobile-menu { transition: all 0.3s ease; }
+    </style>
+</head>
+<body class="font-sans text-gray-700 bg-gray-50">
+
+    <!-- Header -->
+    <header class="bg-white shadow-md sticky top-0 z-50">
+        <div class="container mx-auto px-4 flex justify-between items-center py-4">
+            <a href="index.html" class="text-2xl font-bold text-purple-600 flex items-center">
+                <i class="fas fa-heartbeat mr-2"></i> Viva Bem+
+            </a>
+            <nav class="hidden md:flex space-x-6 items-center">
+                <a href="index.html" class="text-gray-700 hover:text-purple-600 font-medium">Início</a>
+                <a href="features.html" class="text-gray-700 hover:text-purple-600 font-medium">Funcionalidades</a>
+                <a href="about.html" class="text-gray-700 hover:text-purple-600 font-medium">Sobre Nós</a>
+                <a href="contact.html" class="text-gray-700 hover:text-purple-600 font-medium">Contactos</a>
+                <a href="login1.html" class="text-gray-700 hover:text-purple-600 font-medium">Entrar</a>
+                <a href="signup.html" class="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition">Registar</a>
+            </nav>
+            <button id="mobile-menu-button" class="md:hidden text-gray-700">
+                <i class="fas fa-bars text-xl"></i>
+            </button>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="mobile-menu hidden md:hidden bg-white absolute w-full left-0 right-0 shadow-lg px-4 py-2">
+            <a href="index.html" class="block py-2 text-gray-700 hover:text-purple-600">Início</a>
+            <a href="features.html" class="block py-2 text-gray-700 hover:text-purple-600">Funcionalidades</a>
+            <a href="about.html" class="block py-2 text-gray-700 hover:text-purple-600">Sobre Nós</a>
+            <a href="contact.html" class="block py-2 text-gray-700 hover:text-purple-600">Contactos</a>
+            <a href="login1.html" class="block py-2 text-gray-700 hover:text-purple-600">Entrar</a>
+            <a href="signup.html" class="block py-2 text-purple-600 font-medium">Registar</a>
+        </div>
+    </header>
+
+    <!-- Hero -->
+    <section class="bg-gradient-to-r from-purple-700 to-blue-600 text-white py-20 text-center">
+        <div class="container mx-auto px-4">
+            <h1 class="text-4xl md:text-5xl font-bold mb-4">Viva Bem+</h1>
+            <p class="text-xl max-w-2xl mx-auto mb-8">Soluções inovadoras para a sua recuperação física e motora</p>
+            <div class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
+                <a href="login1.html" class="bg-white text-purple-700 px-6 py-3 rounded-lg font-medium hover:bg-gray-100 transition duration-300">
+                    Área de Cliente
+                </a>
+                <a href="contact.html" class="bg-transparent border-2 border-white text-white px-6 py-3 rounded-lg font-medium hover:bg-white hover:text-purple-700 transition duration-300">
+                    Marcar Consulta
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Jogos -->
+    <section class="py-16 bg-white">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-3xl font-bold mb-8">Jogos Interativos</h2>
+            <div class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-8">
+                <a href="games/memory/index.html" class="bg-purple-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-purple-700 transition duration-300">Jogo da Memória</a>
+                <a href="games/crossword/index.html" class="bg-purple-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-purple-700 transition duration-300">Palavras Cruzadas</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Serviços -->
+    <section class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-12">Nossos Serviços</h2>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="bg-gray-50 rounded-xl p-6 shadow-md hover:shadow-lg transition duration-300">
+                    <div class="text-purple-600 mb-4"><i class="fas fa-user-md text-4xl"></i></div>
+                    <h3 class="text-xl font-bold mb-3">Acompanhamento Médico</h3>
+                    <p class="text-gray-600">Consultas virtuais com especialistas em reabilitação física e motora.</p>
+                </div>
+                <div class="bg-gray-50 rounded-xl p-6 shadow-md hover:shadow-lg transition duration-300">
+                    <div class="text-purple-600 mb-4"><i class="fas fa-dumbbell text-4xl"></i></div>
+                    <h3 class="text-xl font-bold mb-3">Exercícios Personalizados</h3>
+                    <p class="text-gray-600">Programas de exercícios adaptados às suas necessidades específicas.</p>
+                </div>
+                <div class="bg-gray-50 rounded-xl p-6 shadow-md hover:shadow-lg transition duration-300">
+                    <div class="text-purple-600 mb-4"><i class="fas fa-chart-line text-4xl"></i></div>
+                    <h3 class="text-xl font-bold mb-3">Monitorização de Progresso</h3>
+                    <p class="text-gray-600">Acompanhamento detalhado da sua evolução ao longo do tratamento.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-xl font-bold mb-4">Viver Bem+</h3>
+                    <p class="text-gray-400">Soluções inovadoras em reabilitação física e motora virtuais.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4">Links Rápidos</h4>
+                    <ul class="space-y-2">
+                        <li><a href="about.html" class="text-gray-400 hover:text-white transition">Sobre Nós</a></li>
+                        <li><a href="features.html" class="text-gray-400 hover:text-white transition">Funcionalidades</a></li>
+                        <li><a href="contact.html" class="text-gray-400 hover:text-white transition">Contactos</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4">Legal</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Termos de Serviço</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Política de Privacidade</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Cookies</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4">Contactos</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li class="flex items-center"><i class="fas fa-map-marker-alt mr-2"></i> Porto, Portugal</li>
+                        <li class="flex items-center"><i class="fas fa-phone-alt mr-2"></i> +351 123 456 789</li>
+                        <li class="flex items-center"><i class="fas fa-envelope mr-2"></i> info@rehabvirtual.pt</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
+                <p>&copy; 2023 Viver Bem+. Todos os direitos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Mobile Menu Toggle Script -->
+    <script>
+        document.getElementById('mobile-menu-button').addEventListener('click', function () {
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        document.addEventListener('click', function (event) {
+            const mobileMenu = document.getElementById('mobile-menu');
+            const menuButton = document.getElementById('mobile-menu-button');
+            if (!mobileMenu.contains(event.target) && !menuButton.contains(event.target)) {
+                mobileMenu.classList.add('hidden');
+            }
+        });
+    </script>
+</body>
+</html>

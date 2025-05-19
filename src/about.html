@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sobre Nós | Viva Bem+</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    .mission-card {
+      transition: all 0.3s ease;
+    }
+    .mission-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+    }
+    .team-member {
+      transition: all 0.3s ease;
+    }
+    .team-member:hover {
+      transform: scale(1.05);
+    }
+  </style>
+</head>
+<body class="font-sans text-gray-700 bg-gray-50">
+  <!-- Header -->
+  <header class="bg-white shadow-md sticky top-0 z-50">
+    <div class="container mx-auto px-4 flex justify-between items-center py-4">
+      <a href="mainpage.html" class="text-2xl font-bold text-purple-600 flex items-center">
+        <i class="fas fa-heartbeat mr-2"></i> Viva Bem+
+      </a>
+      <nav class="hidden md:flex space-x-6">
+        <a href="mainpage.html" class="text-gray-700 hover:text-purple-600 font-medium">Início</a>
+        <a href="features.html" class="text-gray-700 hover:text-purple-600 font-medium">Funcionalidades</a>
+        <a href="src/games/games.html" class="text-gray-700 hover:text-purple-600 font-medium">Jogos Sérios</a>
+        <a href="about.html" class="text-purple-600 font-medium">Sobre Nós</a>
+        <a href="contact.html" class="text-gray-700 hover:text-purple-600 font-medium">Contactos</a>
+        <a href="login1.html" class="text-gray-700 hover:text-purple-600 font-medium">Entrar</a>
+        <a href="signup.html" class="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition">Registar</a>
+      </nav>
+      <button class="md:hidden text-gray-700">
+        <i class="fas fa-bars text-xl"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="bg-gradient-to-r from-purple-700 to-blue-600 text-white py-20 text-center">
+    <div class="container mx-auto px-4">
+      <h1 class="text-4xl md:text-5xl font-bold mb-4">Sobre o Viva Bem+</h1>
+      <p class="text-xl max-w-2xl mx-auto">
+        Revolucionando a reabilitação geriátrica através da tecnologia e cuidado humanizado
+      </p>
+    </div>
+  </section>
+
+  <!-- About Content -->
+  <section class="py-16 bg-white">
+    <div class="container mx-auto px-4 max-w-4xl">
+      <div class="mb-12">
+        <p class="text-lg mb-6">
+          Na <strong class="text-purple-600">Viva Bem+</strong>, transformamos a experiência de reabilitação para a terceira idade. Nossa plataforma nasceu da união entre profissionais de saúde e especialistas em tecnologia comprometidos com soluções humanizadas.
+        </p>
+        <p class="text-lg mb-6">
+          Desde 2010, temos trabalhado com clínicas, hospitais e centros de dia para desenvolver uma abordagem que combina o melhor dos cuidados tradicionais com as vantagens da inovação digital.
+        </p>
+      </div>
+
+      <!-- Mission Cards -->
+      <div class="grid md:grid-cols-3 gap-8 mb-16">
+        <div class="mission-card bg-gray-50 rounded-xl p-6 shadow-md">
+          <div class="text-purple-600 mb-4">
+            <i class="fas fa-heart text-3xl"></i>
+          </div>
+          <h3 class="text-xl font-bold mb-3">Nossa Missão</h3>
+          <p class="text-gray-600">
+            Promover autonomia e bem-estar na terceira idade através da tecnologia, mantendo sempre o foco na individualidade de cada paciente.
+          </p>
+        </div>
+        
+        <div class="mission-card bg-gray-50 rounded-xl p-6 shadow-md">
+          <div class="text-purple-600 mb-4">
+            <i class="fas fa-eye text-3xl"></i>
+          </div>
+          <h3 class="text-xl font-bold mb-3">Nossa Visão</h3>
+          <p class="text-gray-600">
+            Tornar-nos referência internacional em reabilitação virtual, com soluções acessíveis para todas as realidades socioeconômicas.
+          </p>
+        </div>
+        
+        <div class="mission-card bg-gray-50 rounded-xl p-6 shadow-md">
+          <div class="text-purple-600 mb-4">
+            <i class="fas fa-hand-holding-heart text-3xl"></i>
+          </div>
+          <h3 class="text-xl font-bold mb-3">Nossos Valores</h3>
+          <p class="text-gray-600">
+            <strong>Empatia</strong> no atendimento, <strong>Inovação</strong> contínua, <strong>Respeito</strong> à individualidade e comprovação de <strong>Resultados</strong>.
+          </p>
+        </div>
+      </div>
+
+      <!-- Why Section -->
+      <div class="mb-12">
+        <h2 class="text-2xl font-bold mb-6 text-purple-600">Porquê Jogos Sérios na Reabilitação?</h2>
+        <div class="flex flex-col md:flex-row gap-8 items-center mb-8">
+          <div class="md:w-1/2">
+            <img src="https://images.unsplash.com/photo-1585435557343-3b092031a831?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Idoso usando tecnologia" class="rounded-lg shadow-md w-full">
+          </div>
+          <div class="md:w-1/2">
+            <p class="text-lg mb-4">
+              Nossa abordagem com jogos sérios foi validada por um estudo de 12 meses com 200 participantes, mostrando:
+            </p>
+            <ul class="list-disc list-inside space-y-2 text-gray-700 mb-4">
+              <li><strong>72%</strong> maior adesão ao tratamento comparado a métodos tradicionais</li>
+              <li><strong>40%</strong> mais rápido alcance de metas de reabilitação</li>
+              <li><strong>89%</strong> dos pacientes relataram maior satisfação com a terapia</li>
+            </ul>
+          </div>
+        </div>
+        <p class="text-lg">
+          A gamificação transforma exercícios repetitivos em desafios estimulantes, com feedback imediato que mantém os pacientes motivados. Nossos algoritmos ajustam automaticamente a dificuldade conforme o progresso, garantindo que cada sessão seja segura e eficaz.
+        </p>
+      </div>
+
+      <!-- Environment Section -->
+      <div class="mb-12 bg-blue-50 rounded-xl p-8">
+        <h2 class="text-2xl font-bold mb-6 text-blue-600">Um Ecossistema Completo de Cuidados</h2>
+        <p class="text-lg mb-4">
+          A Viva Bem+ vai além dos jogos - criamos um <strong>ambiente colaborativo</strong> onde:
+        </p>
+        <ul class="grid md:grid-cols-2 gap-4 mb-4">
+          <li class="flex items-start">
+            <i class="fas fa-check text-blue-500 mr-2 mt-1"></i>
+            <span>Terapeutas acompanham múltiplos pacientes em tempo real</span>
+          </li>
+          <li class="flex items-start">
+            <i class="fas fa-check text-blue-500 mr-2 mt-1"></i>
+            <span>Familiares recebem relatórios periódicos de progresso</span>
+          </li>
+          <li class="flex items-start">
+            <i class="fas fa-check text-blue-500 mr-2 mt-1"></i>
+            <span>Pacientes conectam-se em comunidades de apoio</span>
+          </li>
+          <li class="flex items-start">
+            <i class="fas fa-check text-blue-500 mr-2 mt-1"></i>
+            <span>Profissionais compartilham melhores práticas</span>
+          </li>
+        </ul>
+        <p class="text-lg">
+          Esta rede integrada permite intervenções mais precisas e um acompanhamento contínuo que vai além das sessões terapêuticas.
+        </p>
+      </div>
+
+      <!-- Science Section -->
+      <div class="mb-12 bg-purple-50 rounded-xl p-8">
+        <h2 class="text-2xl font-bold mb-6 text-purple-600">Base Científica Sólida</h2>
+        <p class="text-lg mb-4">
+          Desenvolvemos nossa plataforma através de:
+        </p>
+        <div class="grid md:grid-cols-2 gap-8 mb-4">
+          <div>
+            <h3 class="font-bold mb-2 text-purple-700">Pesquisa com Profissionais</h3>
+            <ul class="list-disc list-inside space-y-1 text-gray-700">
+              <li>Entrevistas com 50 fisioterapeutas geriátricos</li>
+              <li>Questionários respondidos por 120 terapeutas ocupacionais</li>
+              <li>Testes com 35 centros de reabilitação</li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="font-bold mb-2 text-purple-700">Validação Clínica</h3>
+            <ul class="list-disc list-inside space-y-1 text-gray-700">
+              <li>Estudo randomizado controlado com 200 participantes</li>
+              <li>Parceria com 3 universidades portuguesas</li>
+              <li>Publicações em 4 revistas científicas</li>
+            </ul>
+          </div>
+        </div>
+        <p class="text-lg">
+          Todo exercício disponível em nossa plataforma foi validado por pelo menos dois profissionais de saúde e testado com grupos focais de idosos.
+        </p>
+      </div>
+
+      <!-- Team Section -->
+      <div class="mb-12">
+        <h2 class="text-2xl font-bold mb-8 text-purple-600">Conheça Nossa Equipa</h2>
+        <div class="grid md:grid-cols-3 gap-8">
+          <div class="team-member text-center bg-gray-50 p-6 rounded-xl shadow-md">
+            <img src="https://randomuser.me/api/portraits/women/65.jpg" alt="Terapeuta" class="w-32 h-32 rounded-full mx-auto mb-4 border-4 border-purple-200">
+            <h3 class="font-bold">Dra. Ana Silva</h3>
+            <p class="text-gray-600 mb-2">Fisioterapeuta Geriátrica</p>
+            <p class="text-sm text-gray-500">
+              15 anos de experiência em reabilitação neurológica para idosos
+            </p>
+          </div>
+          <div class="team-member text-center bg-gray-50 p-6 rounded-xl shadow-md">
+            <img src="https://randomuser.me/api/portraits/men/42.jpg" alt="Desenvolvedor" class="w-32 h-32 rounded-full mx-auto mb-4 border-4 border-purple-200">
+            <h3 class="font-bold">Miguel Oliveira</h3>
+            <p class="text-gray-600 mb-2">Especialista em Jogos Sérios</p>
+            <p class="text-sm text-gray-500">
+              Desenvolvedor de soluções de saúde digital há 8 anos
+            </p>
+          </div>
+          <div class="team-member text-center bg-gray-50 p-6 rounded-xl shadow-md">
+            <img src="https://randomuser.me/api/portraits/women/33.jpg" alt="Pesquisadora" class="w-32 h-32 rounded-full mx-auto mb-4 border-4 border-purple-200">
+            <h3 class="font-bold">Dra. Sofia Costa</h3>
+            <p class="text-gray-600 mb-2">Gerontóloga e Pesquisadora</p>
+            <p class="text-sm text-gray-500">
+              Doutorada em Envelhecimento Ativo pela Universidade do Porto
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Commitment Section -->
+      <div class="mb-12 bg-green-50 rounded-xl p-8">
+        <h2 class="text-2xl font-bold mb-6 text-green-600">Nosso Compromisso</h2>
+        <p class="text-lg mb-4">
+          Estamos empenhados em:
+        </p>
+        <ul class="grid md:grid-cols-2 gap-4 mb-4">
+          <li class="flex items-start">
+            <i class="fas fa-check-circle text-green-500 mr-2 mt-1"></i>
+            <span><strong>Inovação contínua:</strong> Atualizações trimestrais com novos exercícios e funcionalidades</span>
+          </li>
+          <li class="flex items-start">
+            <i class="fas fa-check-circle text-green-500 mr-2 mt-1"></i>
+            <span><strong>Acessibilidade:</strong> Interface adaptável para diferentes níveis de habilidade tecnológica</span>
+          </li>
+          <li class="flex items-start">
+            <i class="fas fa-check-circle text-green-500 mr-2 mt-1"></i>
+            <span><strong>Segurança:</strong> Todos os dados protegidos com criptografia de última geração</span>
+          </li>
+          <li class="flex items-start">
+            <i class="fas fa-check-circle text-green-500 mr-2 mt-1"></i>
+            <span><strong>Suporte:</strong> Equipe de especialistas disponível para dúvidas técnicas e clínicas</span>
+          </li>
+        </ul>
+        <p class="text-lg">
+          Acreditamos que a tecnologia, quando bem aplicada, pode transformar vidas. Por isso, reinvestimos 20% de nossos lucros em pesquisa e desenvolvimento de novas soluções.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="py-16 bg-gradient-to-r from-purple-600 to-blue-500 text-white text-center">
+    <div class="container mx-auto px-4">
+      <h2 class="text-3xl font-bold mb-6">Junte-se a Nossa Missão</h2>
+      <p class="text-xl max-w-2xl mx-auto mb-8">
+        Seja um paciente, cuidador ou profissional de saúde - temos soluções para você.
+      </p>
+      <div class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
+        <a href="signup.html" class="bg-white text-purple-600 px-8 py-3 rounded-lg font-medium hover:bg-gray-100 transition">
+          Criar Conta Gratuita
+        </a>
+        <a href="contact.html" class="bg-transparent border-2 border-white text-white px-8 py-3 rounded-lg font-medium hover:bg-white hover:text-purple-600 transition">
+          Falar com Especialista
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-gray-800 text-white py-12">
+    <div class="container mx-auto px-4">
+      <div class="grid md:grid-cols-4 gap-8">
+        <div>
+          <h3 class="text-xl font-bold mb-4">Viva Bem+</h3>
+          <p class="text-gray-400 mb-4">
+            Tecnologia inovadora para reabilitação na terceira idade.
+          </p>
+          <div class="flex space-x-4">
+            <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-twitter"></i></a>
+            <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-instagram"></i></a>
+            <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-linkedin-in"></i></a>
+          </div>
+        </div>
+        
+        <div>
+          <h4 class="font-bold mb-4">Recursos</h4>
+          <ul class="space-y-2">
+            <li><a href="games.html" class="text-gray-400 hover:text-white transition">Jogos Sérios</a></li>
+            <li><a href="features.html" class="text-gray-400 hover:text-white transition">Funcionalidades</a></li>
+            <li><a href="research.html" class="text-gray-400 hover:text-white transition">Pesquisas</a></li>
+          </ul>
+        </div>
+        
+        <div>
+          <h4 class="font-bold mb-4">Institucional</h4>
+          <ul class="space-y-2">
+            <li><a href="about.html" class="text-gray-400 hover:text-white transition">Sobre Nós</a></li>
+            <li><a href="partners.html" class="text-gray-400 hover:text-white transition">Parceiros</a></li>
+            <li><a href="careers.html" class="text-gray-400 hover:text-white transition">Carreiras</a></li>
+          </ul>
+        </div>
+        
+        <div>
+          <h4 class="font-bold mb-4">Contactos</h4>
+          <ul class="space-y-2 text-gray-400">
+            <li class="flex items-center">
+              <i class="fas fa-phone-alt mr-3"></i> +351 220 123 456
+            </li>
+            <li class="flex items-center">
+              <i class="fas fa-envelope mr-3"></i> info@vivabem.pt
+            </li>
+            <li class="flex items-center">
+              <i class="fas fa-map-marker-alt mr-3"></i> Porto, Portugal
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
+        <p>&copy; Viva Bem+.<a href="privacy.html" class="hover:text-white hover:underline">Política de Privacidade</a></p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Back to Top Button
+    const backToTop = document.createElement('button');
+    backToTop.innerHTML = '<i class="fas fa-arrow-up"></i>';
+    backToTop.className = 'fixed bottom-8 right-8 bg-purple-600 text-white p-3 rounded-full shadow-lg opacity-0 invisible transition-all duration-300 z-50';
+    document.body.appendChild(backToTop);
+
+    window.addEventListener('scroll', () => {
+      if (window.pageYOffset > 300) {
+        backToTop.classList.remove('opacity-0', 'invisible');
+        backToTop.classList.add('opacity-100', 'visible');
+      } else {
+        backToTop.classList.remove('opacity-100', 'visible');
+        backToTop.classList.add('opacity-0', 'invisible');
+      }
+    });
+
+    backToTop.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    // Mobile Menu Toggle
+    const menuButton = document.querySelector('header button');
+    const menuItems = document.querySelector('header nav');
+    
+    menuButton.addEventListener('click', () => {
+      menuItems.classList.toggle('hidden');
+      menuItems.classList.toggle('flex');
+      menuItems.classList.toggle('flex-col');
+      menuItems.classList.toggle('absolute');
+      menuItems.classList.toggle('top-16');
+      menuItems.classList.toggle('left-0');
+      menuItems.classList.toggle('right-0');
+      menuItems.classList.toggle('bg-white');
+      menuItems.classList.toggle('p-4');
+      menuItems.classList.toggle('space-y-4');
+      menuItems.classList.toggle('space-x-0');
+      menuItems.classList.toggle('shadow-md');
+    });
+  </script>
+</body>
+</html>

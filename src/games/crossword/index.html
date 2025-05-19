@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo de Palavras Cruzadas</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container mx-auto mt-10 text-center">
+        <h1 class="text-4xl font-bold mb-4">Jogo de Palavras Cruzadas</h1>
+        
+        <!-- Game board -->
+        <div id="crossword-board" class="grid gap-1 mx-auto w-max"></div>
+        
+        <!-- Clues section -->
+        <div id="clues" class="mt-6">
+            <h2 class="text-2xl font-semibold mb-2">Dicas:</h2>
+            <div id="across-clues" class="mb-4">
+                <h3 class="text-xl font-medium">Horizontal:</h3>
+                <ul id="across-list" class="list-disc list-inside"></ul>
+            </div>
+            <div id="down-clues">
+                <h3 class="text-xl font-medium">Vertical:</h3>
+                <ul id="down-list" class="list-disc list-inside"></ul>
+            </div>
+        </div>
+
+        <!-- Score display -->
+        <div id="scoreboard" class="mt-6">
+            <p id="userScore" class="text-lg">Sua Pontuação: 0</p>
+            <p id="highScore" class="text-lg">High-Score Global: 0</p>
+        </div>
+
+        <button id="startBtn" class="mt-4 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition">
+            Iniciar Jogo
+        </button>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-auth-compat.js"></script>
+    
+    <!-- Your Firebase config -->
+    <script>
+      // Replace with your actual Firebase config
+      const firebaseConfig = {
+        apiKey: "AIzaSyBMwJEeBE1tfT-wVPJ8c2lSlEmuqYEuqnY",
+        authDomain: "projeto-final-de-curso-425a9.firebaseapp.com",
+        projectId: "projeto-final-de-curso-425a9",
+        storageBucket: "projeto-final-de-curso-425a9.appspot.com",
+        messagingSenderId: "475780755633",
+        appId: "1:475780755633:web:6dbf97c6b394134e91f290",
+        measurementId: "G-DZ3DNKYQP5"
+      };
+      
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+    </script>
+    
+    <!-- Your game script -->
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard do Paciente</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+</head>
+<body class="bg-gray-50 min-h-screen flex">
+  <!-- Sidebar -->
+  <aside class="w-64 bg-purple-800 text-white min-h-screen p-6 hidden md:block">
+    <h2 class="text-2xl font-bold mb-6 flex items-center"><i class="fas fa-user-injured mr-2"></i>Paciente</h2>
+    <nav class="space-y-4">
+      <a href="#" class="block hover:bg-purple-700 p-2 rounded">Pedir Consulta</a>
+      <a href="#" class="block hover:bg-purple-700 p-2 rounded">Minhas Consultas</a>
+      <a href="mainpage.html" class="block hover:bg-purple-700 p-2 rounded">Voltar ao Início</a>
+    </nav>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="flex-1 p-6 space-y-10">
+    <h1 class="text-3xl font-bold text-gray-800">Dashboard do Paciente</h1>
+
+    <!-- Pedido de Consulta -->
+    <section class="bg-white p-6 rounded-xl shadow-md">
+      <h2 class="text-2xl font-semibold text-purple-800 mb-4">Pedir Consulta</h2>
+      <form id="consultaForm" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="col-span-2">
+          <label for="profissionalSelect" class="block text-sm font-medium text-gray-700">Profissional</label>
+          <select id="profissionalSelect" required class="w-full border rounded px-3 py-2 mt-1"></select>
+        </div>
+        <div>
+          <label for="dataHora" class="block text-sm font-medium text-gray-700">Data e Hora</label>
+          <input type="datetime-local" id="dataHora" required class="w-full border rounded px-3 py-2 mt-1" />
+        </div>
+        <div>
+          <label for="notas" class="block text-sm font-medium text-gray-700">Notas</label>
+          <textarea id="notas" rows="4" class="w-full border rounded px-3 py-2 mt-1"></textarea>
+        </div>
+        <div class="col-span-2">
+          <button type="submit" class="bg-purple-600 text-white px-6 py-2 rounded hover:bg-purple-700">Submeter Pedido</button>
+          <p id="mensagemSucesso" class="mt-2 text-green-600 font-semibold hidden">Pedido submetido com sucesso!</p>
+        </div>
+      </form>
+    </section>
+
+    <!-- Consultas -->
+    <section class="bg-white p-6 rounded-xl shadow-md">
+      <h2 class="text-2xl font-semibold text-purple-800 mb-4">Minhas Consultas</h2>
+      <div id="consultasLista" class="space-y-4"></div>
+    </section>
+  </main>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
+    import {
+      getFirestore,
+      collection,
+      getDocs,
+      addDoc,
+      deleteDoc,
+      doc,
+      query,
+      where,
+      orderBy,
+      serverTimestamp
+    } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
+    import {
+      getAuth,
+      onAuthStateChanged
+    } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBMwJEeBE1tfT-wVPJ8c2lSlEmuqYEuqnY",
+      authDomain: "projeto-final-de-curso-425a9.firebaseapp.com",
+      projectId: "projeto-final-de-curso-425a9"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+
+    const profissionalSelect = document.getElementById("profissionalSelect");
+    const form = document.getElementById("consultaForm");
+    const listaConsultas = document.getElementById("consultasLista");
+    const mensagemSucesso = document.getElementById("mensagemSucesso");
+
+    let currentUserId = null;
+
+    onAuthStateChanged(auth, async user => {
+      if (!user) {
+        window.location.href = "/src/login1.html";
+        return;
+      }
+      currentUserId = user.uid;
+      await carregarProfissionais();
+      await listarConsultas();
+    });
+
+    async function carregarProfissionais() {
+      const snap = await getDocs(query(collection(db, "users"), where("role", "==", "profissional")));
+      snap.forEach(doc => {
+        const data = doc.data();
+        const option = document.createElement("option");
+        option.value = doc.id;
+        option.textContent = `${data.name} (${data.email})`;
+        profissionalSelect.appendChild(option);
+      });
+    }
+
+    form.addEventListener("submit", async e => {
+      e.preventDefault();
+      const profissionalId = profissionalSelect.value;
+      const dataHora = document.getElementById("dataHora").value;
+      const notas = document.getElementById("notas").value.trim();
+
+      await addDoc(collection(db, "pedidosConsultas"), {
+        pacienteId: currentUserId,
+        profissionalId,
+        dataHora,
+        notas,
+        estado: "pendente",
+        criadoEm: serverTimestamp()
+      });
+
+      mensagemSucesso.classList.remove("hidden");
+      form.reset();
+      await listarConsultas();
+    });
+
+    async function listarConsultas() {
+      listaConsultas.innerHTML = "";
+      const q = query(
+        collection(db, "pedidosConsultas"),
+        where("pacienteId", "==", currentUserId),
+        orderBy("dataHora")
+      );
+      const snapshot = await getDocs(q);
+
+      if (snapshot.empty) {
+        listaConsultas.innerHTML = '<p class="text-gray-500">Nenhuma consulta encontrada.</p>';
+        return;
+      }
+
+      snapshot.forEach(docSnap => {
+        const c = docSnap.data();
+        const div = document.createElement("div");
+        div.className = "bg-gray-100 border border-gray-300 p-4 rounded-lg shadow-sm";
+        div.innerHTML = `
+          <p><strong>Data:</strong> ${c.dataHora}</p>
+          <p><strong>Profissional:</strong> ${c.profissionalId}</p>
+          <p><strong>Notas:</strong> ${c.notas || "-"}</p>
+          <p><strong>Estado:</strong> <span class="font-semibold">${c.estado}</span></p>
+        `;
+
+        if (c.estado === "pendente") {
+          const cancelarBtn = document.createElement("button");
+          cancelarBtn.className = "mt-2 bg-red-500 text-white px-4 py-1 rounded hover:bg-red-600";
+          cancelarBtn.textContent = "Cancelar Pedido";
+          cancelarBtn.addEventListener("click", async () => {
+            await deleteDoc(doc(db, "pedidosConsultas", docSnap.id));
+            await listarConsultas();
+          });
+          div.appendChild(cancelarBtn);
+        }
+        listaConsultas.appendChild(div);
+      });
+    }
+  </script>
+</body>
+</html>
