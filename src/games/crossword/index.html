@@ -1,66 +1,65 @@
 <!DOCTYPE html>
 <html lang="pt">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jogo de Palavras Cruzadas</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Palavras Cruzadas | Viva Bem+</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="crossword.css" />
 </head>
-<body>
-    <div class="container mx-auto mt-10 text-center">
-        <h1 class="text-4xl font-bold mb-4">Jogo de Palavras Cruzadas</h1>
-        
-        <!-- Game board -->
-        <div id="crossword-board" class="grid gap-1 mx-auto w-max"></div>
-        
-        <!-- Clues section -->
-        <div id="clues" class="mt-6">
-            <h2 class="text-2xl font-semibold mb-2">Dicas:</h2>
-            <div id="across-clues" class="mb-4">
-                <h3 class="text-xl font-medium">Horizontal:</h3>
-                <ul id="across-list" class="list-disc list-inside"></ul>
-            </div>
-            <div id="down-clues">
-                <h3 class="text-xl font-medium">Vertical:</h3>
-                <ul id="down-list" class="list-disc list-inside"></ul>
-            </div>
-        </div>
-
-        <!-- Score display -->
-        <div id="scoreboard" class="mt-6">
-            <p id="userScore" class="text-lg">Sua Pontuação: 0</p>
-            <p id="highScore" class="text-lg">High-Score Global: 0</p>
-        </div>
-
-        <button id="startBtn" class="mt-4 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition">
-            Iniciar Jogo
-        </button>
+<body class="bg-gray-100 font-sans text-gray-800">
+  <div class="container mx-auto px-4 py-8">
+    <div class="flex items-center justify-between mb-4">
+      <a href="/src/mainpage.html" class="flex items-center space-x-2">
+        <i class="fas fa-heartbeat text-purple-600 text-2xl" aria-hidden="true"></i>
+        <span class="text-xl font-bold text-purple-700">Viva Bem+</span>
+      </a>
+      <button id="voltarBtn" class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded" aria-label="Voltar">
+        Voltar à Página Inicial
+      </button>
     </div>
 
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-auth-compat.js"></script>
+    <h1 class="text-3xl font-bold text-center text-purple-700 mb-6">Jogo de Palavras Cruzadas</h1>
     
-    <!-- Your Firebase config -->
-    <script>
-      // Replace with your actual Firebase config
-      const firebaseConfig = {
-        apiKey: "AIzaSyBMwJEeBE1tfT-wVPJ8c2lSlEmuqYEuqnY",
-        authDomain: "projeto-final-de-curso-425a9.firebaseapp.com",
-        projectId: "projeto-final-de-curso-425a9",
-        storageBucket: "projeto-final-de-curso-425a9.appspot.com",
-        messagingSenderId: "475780755633",
-        appId: "1:475780755633:web:6dbf97c6b394134e91f290",
-        measurementId: "G-DZ3DNKYQP5"
-      };
+    <div class="grid gap-4 md:grid-cols-3">
+      <!-- Grelha do Jogo -->
+      <div class="col-span-2 bg-white rounded-xl shadow p-4 overflow-auto max-h-[80vh]">
+        <table id="tabuleiro" class="w-full border-collapse"></table>
+      </div>
       
-      // Initialize Firebase
-      firebase.initializeApp(firebaseConfig);
-    </script>
-    
-    <!-- Your game script -->
-    <script src="script.js"></script>
+      <!-- Painel de Pistas e Pontuação -->
+      <div class="bg-white rounded-xl shadow p-4">
+        <h2 class="text-xl font-semibold text-purple-700 mb-2">Pistas</h2>
+        <div id="dicas" class="text-sm max-h-[50vh] overflow-y-auto space-y-2"></div>
+        
+        <button id="verificarBtn" class="mt-4 w-full bg-purple-600 text-white py-2 rounded hover:bg-purple-700">Verificar</button>
+        <p id="pontuacao" class="mt-4 font-bold"></p>
+
+        <div class="mt-6">
+          <h3 class="text-lg font-semibold">High-Score Global</h3>
+          <p id="globalScore" class="text-blue-600 font-bold">0 pts</p>
+        </div>
+
+        <div class="mt-4 hidden" id="userScoreBox">
+          <h3 class="text-lg font-semibold">Pontuação do Utilizador</h3>
+          <p id="userScore" class="text-green-600 font-bold">0 pts</p>
+        </div>
+
+        <button id="reiniciarBtn" class="mt-6 w-full bg-gray-200 hover:bg-gray-300 py-2 rounded">Reiniciar Jogo</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="crossword.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
+  <script>
+    document.getElementById('voltarBtn').addEventListener('click', () => {
+      if (window.history.length > 1) {
+        window.history.back();
+      } else {
+        window.location.href = "/src/mainpage.html";
+      }
+    });
+  </script>
 </body>
 </html>

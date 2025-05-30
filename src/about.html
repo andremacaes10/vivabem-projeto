@@ -29,16 +29,25 @@
       <a href="mainpage.html" class="text-2xl font-bold text-purple-600 flex items-center">
         <i class="fas fa-heartbeat mr-2"></i> Viva Bem+
       </a>
-      <nav class="hidden md:flex space-x-6">
+      <nav id="nav-links" class="hidden md:flex space-x-6 items-center">
         <a href="mainpage.html" class="text-gray-700 hover:text-purple-600 font-medium">Início</a>
         <a href="features.html" class="text-gray-700 hover:text-purple-600 font-medium">Funcionalidades</a>
-        <a href="src/games/games.html" class="text-gray-700 hover:text-purple-600 font-medium">Jogos Sérios</a>
+        <a href="reabilitação.html" class="text-gray-700 hover:text-purple-600 font-medium">Reabilitação</a>
         <a href="about.html" class="text-purple-600 font-medium">Sobre Nós</a>
         <a href="contact.html" class="text-gray-700 hover:text-purple-600 font-medium">Contactos</a>
-        <a href="login1.html" class="text-gray-700 hover:text-purple-600 font-medium">Entrar</a>
-        <a href="signup.html" class="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition">Registar</a>
+<div id="auth-links" class="flex space-x-4 items-center">
+  <a href="login1.html" class="text-gray-700 hover:text-purple-600 font-medium">Entrar</a>
+  <a href="signup.html" class="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition">Registar</a>
+</div>
+<div id="user-area" class="hidden flex items-center space-x-4">
+  <a id="client-area-link" href="#" class="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition flex items-center">
+    <i class="fas fa-user mr-2"></i> Área do Cliente
+  </a>
+  <button id="logout-button" class="text-red-500 hover:text-red-700 font-medium">Sair</button>
+</div>
+
       </nav>
-      <button class="md:hidden text-gray-700">
+      <button id="mobile-menu-button" class="md:hidden text-gray-700">
         <i class="fas fa-bars text-xl"></i>
       </button>
     </div>
@@ -261,99 +270,95 @@
   </section>
 
   <!-- Footer -->
-  <footer class="bg-gray-800 text-white py-12">
+  <footer class="bg-gray-800 text-white py-12 mt-16">
     <div class="container mx-auto px-4">
       <div class="grid md:grid-cols-4 gap-8">
         <div>
           <h3 class="text-xl font-bold mb-4">Viva Bem+</h3>
-          <p class="text-gray-400 mb-4">
-            Tecnologia inovadora para reabilitação na terceira idade.
-          </p>
-          <div class="flex space-x-4">
-            <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-facebook-f"></i></a>
-            <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-twitter"></i></a>
-            <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-instagram"></i></a>
-            <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-linkedin-in"></i></a>
-          </div>
+          <p class="text-gray-400">Tecnologia inovadora para reabilitação na terceira idade.</p>
         </div>
-        
         <div>
-          <h4 class="font-bold mb-4">Recursos</h4>
+          <h4 class="font-bold mb-4">Links</h4>
           <ul class="space-y-2">
             <li><a href="games.html" class="text-gray-400 hover:text-white transition">Jogos Sérios</a></li>
             <li><a href="features.html" class="text-gray-400 hover:text-white transition">Funcionalidades</a></li>
-            <li><a href="research.html" class="text-gray-400 hover:text-white transition">Pesquisas</a></li>
-          </ul>
-        </div>
-        
-        <div>
-          <h4 class="font-bold mb-4">Institucional</h4>
-          <ul class="space-y-2">
             <li><a href="about.html" class="text-gray-400 hover:text-white transition">Sobre Nós</a></li>
-            <li><a href="partners.html" class="text-gray-400 hover:text-white transition">Parceiros</a></li>
-            <li><a href="careers.html" class="text-gray-400 hover:text-white transition">Carreiras</a></li>
           </ul>
         </div>
-        
+        <div>
+          <h4 class="font-bold mb-4">Legal</h4>
+          <ul class="space-y-2">
+            <li><a href="#" class="text-gray-400 hover:text-white transition">Termos</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition">Privacidade</a></li>
+          </ul>
+        </div>
         <div>
           <h4 class="font-bold mb-4">Contactos</h4>
           <ul class="space-y-2 text-gray-400">
-            <li class="flex items-center">
-              <i class="fas fa-phone-alt mr-3"></i> +351 220 123 456
-            </li>
-            <li class="flex items-center">
-              <i class="fas fa-envelope mr-3"></i> info@vivabem.pt
-            </li>
-            <li class="flex items-center">
-              <i class="fas fa-map-marker-alt mr-3"></i> Porto, Portugal
-            </li>
+            <li class="flex items-center"><i class="fas fa-phone-alt mr-3"></i> +351 123 456 789</li>
+            <li class="flex items-center"><i class="fas fa-envelope mr-3"></i> info@vivabem.pt</li>
           </ul>
         </div>
       </div>
       <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
-        <p>&copy; Viva Bem+.<a href="privacy.html" class="hover:text-white hover:underline">Política de Privacidade</a></p>
+        <p>&copy; Viva Bem+.</p>
       </div>
     </div>
   </footer>
 
-  <script>
-    // Back to Top Button
-    const backToTop = document.createElement('button');
-    backToTop.innerHTML = '<i class="fas fa-arrow-up"></i>';
-    backToTop.className = 'fixed bottom-8 right-8 bg-purple-600 text-white p-3 rounded-full shadow-lg opacity-0 invisible transition-all duration-300 z-50';
-    document.body.appendChild(backToTop);
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
+    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
 
-    window.addEventListener('scroll', () => {
-      if (window.pageYOffset > 300) {
-        backToTop.classList.remove('opacity-0', 'invisible');
-        backToTop.classList.add('opacity-100', 'visible');
-      } else {
-        backToTop.classList.remove('opacity-100', 'visible');
-        backToTop.classList.add('opacity-0', 'invisible');
-      }
-    });
+    const firebaseConfig = {
+      apiKey: "AIzaSyBMwJEeBE1tfT-wVPJ8c2lSlEmuqYEuqnY",
+      authDomain: "projeto-final-de-curso-425a9.firebaseapp.com",
+      projectId: "projeto-final-de-curso-425a9",
+      storageBucket: "projeto-final-de-curso-425a9.appspot.com",
+      messagingSenderId: "475780755633",
+      appId: "1:475780755633:web:6dbf97c6b394134e91f290"
+    };
 
-    backToTop.addEventListener('click', () => {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
+    if (!document.referrer.includes("index.html")) {
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+      const db = getFirestore(app);
 
-    // Mobile Menu Toggle
-    const menuButton = document.querySelector('header button');
-    const menuItems = document.querySelector('header nav');
-    
-    menuButton.addEventListener('click', () => {
-      menuItems.classList.toggle('hidden');
-      menuItems.classList.toggle('flex');
-      menuItems.classList.toggle('flex-col');
-      menuItems.classList.toggle('absolute');
-      menuItems.classList.toggle('top-16');
-      menuItems.classList.toggle('left-0');
-      menuItems.classList.toggle('right-0');
-      menuItems.classList.toggle('bg-white');
-      menuItems.classList.toggle('p-4');
-      menuItems.classList.toggle('space-y-4');
-      menuItems.classList.toggle('space-x-0');
-      menuItems.classList.toggle('shadow-md');
+      onAuthStateChanged(auth, async (user) => {
+        const authLinks = document.getElementById('auth-links');
+        const userArea = document.getElementById('user-area');
+        if (user) {
+          try {
+            const userDoc = await getDoc(doc(db, "users", user.uid));
+            if (userDoc.exists()) {
+              const role = userDoc.data().role;
+              const clientLink = document.getElementById('client-area-link');
+              clientLink.href = role === "profissional" ? "dashboardprofissional.html" : "dashboardpaciente.html";
+              clientLink.innerHTML = role === "profissional"
+                ? '<i class="fas fa-user-md mr-2"></i> Área Profissional'
+                : '<i class="fas fa-user mr-2"></i> Área do Paciente';
+
+              authLinks.classList.add("hidden");
+              userArea.classList.remove("hidden");
+            }
+          } catch (error) {
+            console.error("Erro ao obter dados do utilizador:", error);
+          }
+        } else {
+          authLinks.classList.remove("hidden");
+          userArea.classList.add("hidden");
+        }
+      });
+
+      document.getElementById("logout-button")?.addEventListener("click", async () => {
+        await signOut(auth);
+        window.location.href = "mainpage.html";
+      });
+    }
+
+    document.getElementById('mobile-menu-button')?.addEventListener('click', () => {
+      document.getElementById('nav-links')?.classList.toggle('hidden');
     });
   </script>
 </body>

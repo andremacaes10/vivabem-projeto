@@ -1,59 +1,328 @@
 <!DOCTYPE html>
 <html lang="pt">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Gerir Consultas</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
-<body class="bg-gray-100 min-h-screen p-6">
-  <div class="max-w-4xl mx-auto">
-    <h1 class="text-2xl font-bold text-gray-800 mb-4">Gerir Consultas</h1>
-    <div id="consultaList" class="space-y-4"></div>
+<body class="bg-gray-100 min-h-screen">
+  <div class="flex">
+    <!-- Sidebar -->
+    <aside class="w-64 bg-purple-800 text-white hidden md:block min-h-screen p-4">
+      <div class="mb-8">
+        <h1 class="text-2xl font-bold mb-2"><i class="fas fa-user-md mr-2"></i>Profissional</h1>
+        <nav class="space-y-2" id="sidebarLinks"></nav>
+      </div>
+    </aside>
+
+    <!-- Conteúdo principal -->
+    <main class="flex-1 p-6">
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold text-gray-800">Gerir Consultas</h2>
+        <div class="flex gap-2">
+          <button id="btnNovaConsulta" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded">Adicionar Consulta</button>
+          <button id="btnExportarTodas" class="bg-indigo-700 hover:bg-indigo-800 text-white px-4 py-2 rounded">Exportar Todas</button>
+          <button id="btnVoltar" class="bg-gray-400 hover:bg-gray-500 text-white px-4 py-2 rounded">Voltar</button>
+        </div>
+      </div>
+
+      <div id="consultaList" class="space-y-4"></div>
+      <div id="successToast" class="hidden fixed bottom-5 right-5 bg-green-600 text-white px-4 py-2 rounded shadow-lg transition-opacity duration-300">Consulta guardada com sucesso!</div>
+    </main>
   </div>
+
+  <!-- Modal -->
+  <div id="modalNovaConsulta" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+  <div class="bg-white p-6 rounded shadow-lg w-full max-w-md space-y-4">
+    <h2 class="text-xl font-bold">Consulta</h2>
+
+    <label for="dataInput" class="block text-sm font-medium text-gray-700">Data</label>
+    <input id="dataInput" type="date" class="w-full border rounded px-3 py-2" />
+
+    <label for="horaInput" class="block text-sm font-medium text-gray-700">Hora</label>
+    <input id="horaInput" type="time" class="w-full border rounded px-3 py-2" />
+
+    <label for="localInput" class="block text-sm font-medium text-gray-700">Local</label>
+    <input id="localInput" type="text" class="w-full border rounded px-3 py-2" placeholder="Local" />
+
+    <label for="especialidadeInput" class="block text-sm font-medium text-gray-700">Especialidade</label>
+    <input id="especialidadeInput" type="text" class="w-full border rounded px-3 py-2" placeholder="Especialidade" />
+
+    <label for="assuntoInput" class="block text-sm font-medium text-gray-700">Assunto</label>
+    <textarea id="assuntoInput" class="w-full border rounded px-3 py-2" placeholder="Assunto"></textarea>
+
+    <div class="flex justify-end gap-2">
+      <button id="btnCancelarModal" class="bg-gray-400 text-white px-4 py-2 rounded">Cancelar</button>
+      <button id="btnGuardarConsulta" class="bg-blue-600 text-white px-4 py-2 rounded">Guardar</button>
+    </div>
+  </div>
+</div>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
-    import { getFirestore, collection, getDocs, query, where, orderBy } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
+    import {
+      getFirestore, collection, getDocs, query, where, orderBy, updateDoc, doc, getDoc, addDoc
+    } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
+    import {
+      isMonday, isTuesday, isWednesday, isThursday, isFriday,
+      isWithinInterval, set, isSameDay, parseISO
+    } from "https://cdn.jsdelivr.net/npm/date-fns@3.6.0/+esm";
 
+    const { jsPDF } = window.jspdf;
     const firebaseConfig = {
       apiKey: "AIzaSyBMwJEeBE1tfT-wVPJ8c2lSlEmuqYEuqnY",
       authDomain: "projeto-final-de-curso-425a9.firebaseapp.com",
       projectId: "projeto-final-de-curso-425a9"
     };
+
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
-
+    const auth = getAuth(app);
     const params = new URLSearchParams(window.location.search);
     const uid = params.get("uid");
 
+    let nomePaciente = "Paciente";
+    let consultas = [];
+    let userId = null;
+    let modoEdicao = false;
+    let idConsultaEdicao = null;
+
+    onAuthStateChanged(auth, async user => {
+      if (!user) return;
+      const profDoc = await getDoc(doc(db, "users", user.uid));
+      if (!profDoc.exists() || profDoc.data().role !== "profissional") return;
+      atualizarSidebarComUID();
+      await carregarConsultas();
+    });
+
+    function atualizarSidebarComUID() {
+      const sidebar = document.getElementById("sidebarLinks");
+      sidebar.innerHTML = `
+        <a href="/src/dashboardprofissional.html" class="block py-2 px-3 rounded hover:bg-purple-700"><i class="fas fa-home mr-2"></i>Início</a>
+        <a href="/src/gerir-consultas.html?uid=${uid}" class="block py-2 px-3 rounded bg-purple-700"><i class="fas fa-calendar-check mr-2"></i>Consultas</a>
+        <div class="block py-2 px-3 rounded bg-gray-700 opacity-50 cursor-not-allowed" title="Em desenvolvimento"><i class="fas fa-users mr-2"></i>Pacientes</div>
+      `;
+    }
+
     async function carregarConsultas() {
       const lista = document.getElementById("consultaList");
-      const q = query(
-        collection(db, "appointments"),
-        where("pacienteId", "==", uid),
-        orderBy("data")
-      );
-      const snapshot = await getDocs(q);
-      if (snapshot.empty) {
-        lista.innerHTML = '<p class="text-gray-500">Nenhuma consulta encontrada.</p>';
-        return;
+      lista.innerHTML = '';
+      const userSnap = await getDocs(query(collection(db, "users"), where("authId", "==", uid)));
+      if (userSnap.empty) return;
+      const userDoc = userSnap.docs[0];
+      nomePaciente = userDoc.data().name || "Paciente";
+      userId = userDoc.id;
+
+      const snapshot = await getDocs(query(collection(db, "appointments"), where("pacienteId", "==", userId), orderBy("data")));
+      const hoje = new Date();
+      consultas = snapshot.docs.map(docSnap => ({ id: docSnap.id, ...docSnap.data() }));
+
+      for (const c of consultas) {
+        const dataConsulta = new Date(`${c.data}T${c.hora}`);
+        if (dataConsulta < hoje && c.estado !== "historico") {
+          await updateDoc(doc(db, "appointments", c.id), { estado: "historico" });
+        }
       }
-      snapshot.forEach(doc => {
-        const c = doc.data();
+
+      consultas.filter(c => c.estado !== "historico").forEach(c => {
         const div = document.createElement("div");
-        div.className = "bg-white p-4 rounded shadow";
+        div.className = "bg-white p-4 rounded shadow space-y-2";
         div.innerHTML = `
           <p><strong>Data:</strong> ${c.data}</p>
           <p><strong>Hora:</strong> ${c.hora}</p>
-          <p><strong>Consultório:</strong> ${c.officeNumber}</p>
+          <p><strong>Local:</strong> ${c.local || c.officeNumber || "N/A"}</p>
+          <p><strong>Especialidade:</strong> ${c.especialidade || "N/A"}</p>
           <p><strong>Assunto:</strong> ${c.subject}</p>
-        `;
+          <div class="flex gap-2 mt-2 flex-wrap">
+            <button class="btn-editar bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-1 rounded" data-id="${c.id}" data-json='${JSON.stringify(c)}'>Editar</button>
+            <button class="btn-exportar bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-1 rounded" data-json='${JSON.stringify(c)}'>Exportar PDF</button>
+          </div>`;
         lista.appendChild(div);
+      });
+
+      document.querySelectorAll(".btn-editar").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const dados = JSON.parse(btn.getAttribute("data-json"));
+          abrirModalEdicao(btn.dataset.id, dados);
+        });
+      });
+
+      document.querySelectorAll(".btn-exportar").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const dados = JSON.parse(btn.getAttribute("data-json"));
+          exportarConsulta(dados, nomePaciente);
+        });
       });
     }
 
-    carregarConsultas();
+    function submeterNovaConsulta() {
+      const data = document.getElementById("dataInput").value;
+      const hora = document.getElementById("horaInput").value;
+      const local = document.getElementById("localInput").value;
+      const especialidade = document.getElementById("especialidadeInput").value;
+      const assunto = document.getElementById("assuntoInput").value;
+
+      if (!data || !hora || !assunto) {
+        alert("Data, hora e assunto são obrigatórios.");
+        return;
+      }
+
+      const dataConsulta = new Date(`${data}T${hora}`);
+      const ehDiaUtil = isMonday(dataConsulta) || isTuesday(dataConsulta) || isWednesday(dataConsulta) ||
+                        isThursday(dataConsulta) || isFriday(dataConsulta);
+
+      const horarioManha = isWithinInterval(dataConsulta, {
+        start: set(dataConsulta, { hours: 9, minutes: 0 }),
+        end: set(dataConsulta, { hours: 12, minutes: 0 })
+      });
+
+      const horarioTarde = isWithinInterval(dataConsulta, {
+        start: set(dataConsulta, { hours: 14, minutes: 30 }),
+        end: set(dataConsulta, { hours: 18, minutes: 30 })
+      });
+
+      const feriadosNacionais = [
+        '2025-01-01', '2025-04-25', '2025-05-01', '2025-06-10',
+        '2025-08-15', '2025-10-05', '2025-11-01', '2025-12-01',
+        '2025-12-08', '2025-12-25'
+      ];
+      const ehFeriado = feriadosNacionais.some(feriado => isSameDay(dataConsulta, parseISO(feriado)));
+
+      if (!ehDiaUtil || (!horarioManha && !horarioTarde) || ehFeriado) {
+        alert("Consultas apenas em dias úteis (exceto feriados), das 09:00-12:00 e 14:30-18:30.");
+        return;
+      }
+
+      const consulta = { pacienteId: userId, data, hora, local, especialidade, subject: assunto, estado: "ativa" };
+      (modoEdicao && idConsultaEdicao ? updateDoc(doc(db, "appointments", idConsultaEdicao), consulta)
+        : addDoc(collection(db, "appointments"), consulta))
+        .then(() => {
+          fecharModal();
+          mostrarToast();
+          carregarConsultas();
+        })
+        .catch(err => {
+          console.error("Erro ao guardar consulta:", err);
+          alert("Erro ao guardar consulta.");
+        });
+    }
+
+    function abrirModalNovaConsulta() {
+      modoEdicao = false;
+      idConsultaEdicao = null;
+      limparModal();
+      document.getElementById("modalNovaConsulta").classList.remove("hidden");
+    }
+
+    function abrirModalEdicao(id, dados) {
+      modoEdicao = true;
+      idConsultaEdicao = id;
+      document.getElementById("dataInput").value = dados.data || "";
+      document.getElementById("horaInput").value = dados.hora || "";
+      document.getElementById("localInput").value = dados.local || dados.officeNumber || "";
+      document.getElementById("especialidadeInput").value = dados.especialidade || "";
+      document.getElementById("assuntoInput").value = dados.subject || "";
+      document.getElementById("modalNovaConsulta").classList.remove("hidden");
+    }
+
+    function fecharModal() {
+      document.getElementById("modalNovaConsulta").classList.add("hidden");
+    }
+
+    function limparModal() {
+      document.getElementById("dataInput").value = "";
+      document.getElementById("horaInput").value = "";
+      document.getElementById("localInput").value = "";
+      document.getElementById("especialidadeInput").value = "";
+      document.getElementById("assuntoInput").value = "";
+    }
+
+    function mostrarToast() {
+      const toast = document.getElementById("successToast");
+      toast.classList.remove("hidden");
+      setTimeout(() => toast.classList.add("hidden"), 3000);
+    }
+
+    function exportarConsulta(dados, nomePaciente) {
+  const doc = new jsPDF();
+  const margin = 15;
+  const spacing = 10;
+  let y = margin;
+
+  // Cabeçalho com fundo roxo
+  doc.setFillColor(103, 58, 183); // Roxo escuro
+  doc.rect(0, 0, 210, 30, 'F');
+  doc.setTextColor(255, 255, 255);
+  doc.setFontSize(16);
+  doc.setFont('helvetica', 'bold');
+  doc.text(`Consulta de ${nomePaciente}`, margin, y + 10);
+  y += 30;
+
+  // Linha separadora
+  doc.setDrawColor(200, 200, 200);
+  doc.line(margin, y, 210 - margin, y);
+  y += spacing;
+
+  // Dados da consulta
+  doc.setFontSize(12);
+  doc.setTextColor(50);
+  doc.setFont('helvetica', 'normal');
+
+  const linhas = [
+    `Data: ${dados.data}`,
+    `Hora: ${dados.hora}`,
+    `Local: ${dados.local || "N/A"}`,
+    `Especialidade: ${dados.especialidade || "N/A"}`,
+    `Assunto: ${dados.subject}`
+  ];
+
+  linhas.forEach(linha => {
+    doc.text(linha, margin, y);
+    y += spacing + 2;
+  });
+
+  // Rodapé
+  y += spacing;
+  doc.setFontSize(10);
+  doc.setTextColor(120);
+  doc.text("Documento gerado automaticamente pela plataforma Viva Bem+", margin, y);
+
+  doc.save(`Consulta_${dados.data}.pdf`);
+}
+
+
+
+    function exportarTodasConsultas() {
+      if (consultas.length === 0) return;
+      const doc = new jsPDF();
+      doc.setFontSize(16);
+      doc.text(`Consultas de ${nomePaciente}`, 10, 20);
+      let y = 40;
+      consultas.forEach((c, i) => {
+        if (c.estado === "historico") return;
+        doc.setFontSize(12);
+        doc.text(`Consulta ${i + 1}`, 10, y);
+        doc.text(`Data: ${c.data}`, 10, y + 10);
+        doc.text(`Hora: ${c.hora}`, 10, y + 20);
+        doc.text(`Local: ${c.local || "N/A"}`, 10, y + 30);
+        doc.text(`Especialidade: ${c.especialidade || "N/A"}`, 10, y + 40);
+        doc.text(`Assunto: ${c.subject}`, 10, y + 50);
+        y += 70;
+        if (y > 270) { doc.addPage(); y = 20; }
+      });
+      doc.save(`Consultas_${nomePaciente}.pdf`);
+    }
+
+    // Eventos principais
+    document.getElementById("btnNovaConsulta").addEventListener("click", abrirModalNovaConsulta);
+    document.getElementById("btnExportarTodas").addEventListener("click", exportarTodasConsultas);
+    document.getElementById("btnCancelarModal").addEventListener("click", fecharModal);
+    document.getElementById("btnGuardarConsulta").addEventListener("click", submeterNovaConsulta);
+    document.getElementById("btnVoltar").addEventListener("click", () => history.back());
   </script>
 </body>
 </html>

@@ -1,19 +1,38 @@
-/**
- * Import function triggers from their respective submodules:
- *
- * const {onCall} = require("firebase-functions/v2/https");
- * const {onDocumentWritten} = require("firebase-functions/v2/firestore");
- *
- * See a full list of supported triggers at https://firebase.google.com/docs/functions
- */
+const functions = require("firebase-functions");
+const admin = require("firebase-admin");
+const nodemailer = require("nodemailer");
 
-const {onRequest} = require("firebase-functions/v2/https");
-const logger = require("firebase-functions/logger");
+admin.initializeApp();
 
-// Create and deploy your first functions
-// https://firebase.google.com/docs/functions/get-started
+// Configura o Gmail (ou outro serviço SMTP)
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: "teuemail@gmail.com",
+    pass: "tuasenhaouAppPassword"
+  }
+});
 
-// exports.helloWorld = onRequest((request, response) => {
-//   logger.info("Hello logs!", {structuredData: true});
-//   response.send("Hello from Firebase!");
-// });
+// Destinatário (pode ser o teu email pessoal/profissional)
+const DESTINATARIO = "andremacaes12@gmail.com";
+
+// Função que escuta novas mensagens
+exports.enviarEmailContacto = functions.firestore
+  .document("mensagensContacto/{docId}")
+  .onCreate(async (snap, context) => {
+    const data = snap.data();
+    
+    const mailOptions = {
+      from: `"Contacto do Site" <teuemail@gmail.com>`,
+      to: DESTINATARIO,
+      subject: `Nova mensagem de ${data.nome}`,
+      text: `Nome: ${data.nome}\nEmail: ${data.email}\n\nMensagem:\n${data.mensagem}`
+    };
+
+    try {
+      await transporter.sendMail(mailOptions);
+      console.log("Email enviado com sucesso");
+    } catch (error) {
+      console.error("Erro ao enviar email:", error);
+    }
+  });

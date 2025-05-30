@@ -5,19 +5,34 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Contacte-nos | Viva Bem+</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"/>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"/>
 </head>
 <body class="bg-gray-50 text-gray-800 font-sans">
   <!-- Header -->
-  <header class="bg-white shadow-md">
-    <nav class="container mx-auto px-4 py-4 flex justify-between items-center">
-      <a href="mainpage.html" class="text-2xl font-bold text-purple-600">Viva Bem+</a>
-      <div class="space-x-6">
-        <a href="mainpage.html" class="text-gray-700 hover:text-purple-600 font-medium">Página Inicial</a>
+  <header class="bg-white shadow-md sticky top-0 z-50">
+    <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+      <a href="mainpage.html" class="text-2xl font-bold text-purple-600 flex items-center">
+        <i class="fas fa-heartbeat mr-2"></i> Viva Bem+
+      </a>
+      <nav class="hidden md:flex space-x-6 items-center">
+        <a href="mainpage.html" class="text-gray-700 hover:text-purple-600 font-medium">Início</a>
         <a href="features.html" class="text-gray-700 hover:text-purple-600 font-medium">Funcionalidades</a>
         <a href="about.html" class="text-gray-700 hover:text-purple-600 font-medium">Sobre Nós</a>
-        <a href="contact.html" class="text-gray-700 hover:text-purple-600 font-medium">Contacte-nos</a>
-      </div>
-    </nav>
+        <a href="contact.html" class="text-gray-700 hover:text-purple-600 font-medium">Contactos</a>
+
+        <div id="auth-links" class="flex space-x-4">
+          <a href="login1.html" class="text-gray-700 hover:text-purple-600 font-medium">Entrar</a>
+          <a href="signup.html" class="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition">Registar</a>
+        </div>
+
+        <div id="user-area" class="hidden flex items-center space-x-4">
+          <a id="client-area-link" href="#" class="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition flex items-center">
+            <i class="fas fa-user mr-2"></i> Área do Cliente
+          </a>
+          <button id="logout-button" class="text-red-500 hover:text-red-700 font-medium">Sair</button>
+        </div>
+      </nav>
+    </div>
   </header>
 
   <!-- Main Content -->
@@ -30,7 +45,7 @@
         <ul class="space-y-4">
           <li class="flex items-center">📧 suporte@myapp.com</li>
           <li class="flex items-center">📞 +351 912 345 678</li>
-          <li class="flex items-center">🕒 Segunda a Sexta: 9h - 18h</li>
+          <li class="flex items-center">🕒 Segunda a Sexta: 9:00-12:00 e 14:00 - 18:00</li>
         </ul>
       </div>
 
@@ -59,7 +74,8 @@
   <!-- Firebase SDK -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
-    import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
+    import { getFirestore, collection, addDoc, serverTimestamp, doc, getDoc } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyBMwJEeBE1tfT-wVPJ8c2lSlEmuqYEuqnY",
@@ -67,20 +83,20 @@
       projectId: "projeto-final-de-curso-425a9",
       storageBucket: "projeto-final-de-curso-425a9.appspot.com",
       messagingSenderId: "475780755633",
-      appId: "1:475780755633:web:6dbf97c6b394134e91f290",
-      measurementId: "G-DZ3DNKYQP5"
+      appId: "1:475780755633:web:6dbf97c6b394134e91f290"
     };
 
     const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
     const db = getFirestore(app);
 
-    const form = document.getElementById("contactForm");
-    form.addEventListener("submit", async (e) => {
-      e.preventDefault();
+    const contactForm = document.getElementById("contactForm");
 
-      const name = form.name.value;
-      const email = form.email.value;
-      const message = form.message.value;
+    contactForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const name = contactForm.name.value;
+      const email = contactForm.email.value;
+      const message = contactForm.message.value;
 
       try {
         await addDoc(collection(db, "mensagensContacto"), {
@@ -91,10 +107,44 @@
         });
 
         alert("Mensagem enviada com sucesso!");
-        form.reset();
+        contactForm.reset();
       } catch (error) {
         alert("Erro ao enviar: " + error.message);
       }
+    });
+
+    // Autenticação e UI dinâmica
+    onAuthStateChanged(auth, async (user) => {
+      const authLinks = document.getElementById("auth-links");
+      const userArea = document.getElementById("user-area");
+
+      if (user) {
+        try {
+          const userDoc = await getDoc(doc(db, "users", user.uid));
+          if (userDoc.exists()) {
+            const userData = userDoc.data();
+            const isProfessional = userData.role === "profissional";
+
+            authLinks.classList.add("hidden");
+            userArea.classList.remove("hidden");
+
+            const clientLink = document.getElementById("client-area-link");
+            clientLink.href = isProfessional ? "dashboardprofissional.html" : "dashboardpaciente.html";
+            clientLink.innerHTML = isProfessional
+              ? '<i class="fas fa-user-md mr-2"></i> Área Profissional'
+              : '<i class="fas fa-user mr-2"></i> Área do Paciente';
+          }
+        } catch (error) {
+          console.error("Erro ao obter dados do utilizador:", error);
+        }
+      } else {
+        authLinks.classList.remove("hidden");
+        userArea.classList.add("hidden");
+      }
+    });
+
+    document.getElementById("logout-button")?.addEventListener("click", () => {
+      signOut(auth).then(() => location.href = "mainpage.html");
     });
   </script>
 </body>

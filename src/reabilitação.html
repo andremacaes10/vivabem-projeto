@@ -1,176 +1,146 @@
 <!DOCTYPE html>
 <html lang="pt">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Recursos de Reabilitação | Viva Bem+</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Recursos de Reabilitação | Viva Bem+</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
 </head>
 <body class="bg-gray-50 font-sans">
-    <!-- Header -->
-    <header class="bg-white shadow-md sticky top-0 z-50">
-        <div class="container mx-auto px-4 flex justify-between items-center py-4">
-            <a href="mainpage.html" class="text-2xl font-bold text-purple-600 flex items-center">
-                <i class="fas fa-heartbeat mr-2"></i> Viva Bem+
-            </a>
-            <nav class="hidden md:flex space-x-6 items-center">
-                <a href="mainpage.html" class="text-gray-700 hover:text-purple-600 font-medium">Início</a>
-                <a href="features.html" class="text-gray-700 hover:text-purple-600 font-medium">Funcionalidades</a>
-                <a href="reabilitacao.html" class="text-purple-600 font-medium">Reabilitação</a>
-                <a href="about.html" class="text-gray-700 hover:text-purple-600 font-medium">Sobre Nós</a>
-                <a href="contact.html" class="text-gray-700 hover:text-purple-600 font-medium">Contactos</a>
-            </nav>
-            <button id="mobile-menu-button" class="md:hidden text-gray-700">
-                <i class="fas fa-bars text-xl"></i>
-            </button>
-        </div>
-    </header>
+  <header class="bg-white shadow-md sticky top-0 z-50">
+    <div class="container mx-auto px-4 flex justify-between items-center py-4">
+      <a href="mainpage.html" class="text-2xl font-bold text-purple-600 flex items-center">
+        <i class="fas fa-heartbeat mr-2"></i> Viva Bem+
+      </a>
+      <nav class="hidden md:flex space-x-6 items-center" id="navbar">
+        <a href="mainpage.html" class="text-gray-700 hover:text-purple-600 font-medium">Início</a>
+        <a href="features.html" class="text-gray-700 hover:text-purple-600 font-medium">Funcionalidades</a>
+        <a href="reabilitacao.html" class="text-purple-600 font-medium">Reabilitação</a>
+        <a href="about.html" class="text-gray-700 hover:text-purple-600 font-medium">Sobre Nós</a>
+        <a href="contact.html" class="text-gray-700 hover:text-purple-600 font-medium">Contactos</a>
+        <a href="#" id="auth-link" class="text-white bg-blue-600 px-4 py-2 rounded-lg font-medium hover:bg-blue-700 transition"></a>
+        <button id="logout-btn" class="hidden text-sm text-red-600 hover:underline ml-2">Sair</button>
+      </nav>
+    </div>
+  </header>
 
-    <!-- Main Content -->
-    <main class="container mx-auto px-4 py-8">
-        <!-- Title Section -->
-        <section class="text-center mb-12">
-            <h1 class="text-4xl font-bold text-purple-700 mb-4">Recursos de Reabilitação</h1>
-            <p class="text-xl text-gray-600 max-w-2xl mx-auto">
-                Jogos interativos e exercícios físicos para promover a saúde e bem-estar
+  <main class="container mx-auto px-4 py-8">
+    <section class="text-center mb-12">
+      <h1 class="text-4xl font-bold text-purple-700 mb-4">Recursos de Reabilitação</h1>
+      <p class="text-xl text-gray-600 max-w-2xl mx-auto">Jogos interativos e exercícios físicos para promover a saúde e bem-estar</p>
+    </section>
+
+    <section class="mb-16">
+      <h2 class="text-3xl font-bold mb-8 text-center">Jogos Terapêuticos</h2>
+      <div class="grid md:grid-cols-2 gap-8">
+        <!-- Memory Game -->
+        <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition">
+          <div class="h-48 bg-purple-600 flex items-center justify-center">
+            <i class="fas fa-brain text-white text-6xl"></i>
+          </div>
+          <div class="p-6">
+            <h3 class="text-2xl font-bold mb-3">Jogo da Memória</h3>
+            <p class="text-gray-600 mb-2">
+              Melhore a sua memória e concentração com pares combinados.
+              <br><span id="memory-score" class="block mt-2 font-medium text-purple-700"></span>
             </p>
-        </section>
-
-        <!-- Games Section -->
-        <section class="mb-16">
-            <h2 class="text-3xl font-bold mb-8 text-center">Jogos Terapêuticos</h2>
-            <div class="grid md:grid-cols-2 gap-8">
-                <!-- Memory Game Card -->
-                <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition duration-300">
-                    <div class="h-48 bg-purple-600 flex items-center justify-center">
-                        <i class="fas fa-brain text-white text-6xl"></i>
-                    </div>
-                    <div class="p-6">
-                        <h3 class="text-2xl font-bold mb-3">Jogo da Memória</h3>
-                        <p class="text-gray-600 mb-4">
-                            Melhore sua memória e concentração com este jogo de pares combinados.
-                        </p>
-                        <a href="games/memory/index.html" class="inline-block bg-purple-600 text-white px-6 py-2 rounded-lg hover:bg-purple-700 transition">
-                            Jogar Agora
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Crossword Game Card -->
-                <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition duration-300">
-                    <div class="h-48 bg-blue-600 flex items-center justify-center">
-                        <i class="fas fa-font text-white text-6xl"></i>
-                    </div>
-                    <div class="p-6">
-                        <h3 class="text-2xl font-bold mb-3">Palavras Cruzadas</h3>
-                        <p class="text-gray-600 mb-4">
-                            Exercite seu vocabulário e raciocínio com este desafio de palavras.
-                        </p>
-                        <a href="games/crossword/index.html" class="inline-block bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition">
-                            Jogar Agora
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Exercise Videos Section -->
-        <section>
-            <h2 class="text-3xl font-bold mb-8 text-center">Vídeos de Exercícios para Idosos</h2>
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Video 1 -->
-                <div class="bg-white rounded-lg shadow-md overflow-hidden">
-                    <div class="aspect-w-16 aspect-h-9">
-                        <iframe class="w-full h-64" src="https://www.youtube.com/embed/VIDEO_ID_1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                    </div>
-                    <div class="p-4">
-                        <h3 class="font-bold text-xl mb-2">Alongamentos Suaves</h3>
-                        <p class="text-gray-600">Rotina de 15 minutos para melhorar flexibilidade</p>
-                    </div>
-                </div>
-
-                <!-- Video 2 -->
-                <div class="bg-white rounded-lg shadow-md overflow-hidden">
-                    <div class="aspect-w-16 aspect-h-9">
-                        <iframe class="w-full h-64" src="https://www.youtube.com/embed/VIDEO_ID_2" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                    </div>
-                    <div class="p-4">
-                        <h3 class="font-bold text-xl mb-2">Exercícios de Equilíbrio</h3>
-                        <p class="text-gray-600">Prevenção de quedas com exercícios simples</p>
-                    </div>
-                </div>
-
-                <!-- Video 3 -->
-                <div class="bg-white rounded-lg shadow-md overflow-hidden">
-                    <div class="aspect-w-16 aspect-h-9">
-                        <iframe class="w-full h-64" src="https://www.youtube.com/embed/VIDEO_ID_3" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                    </div>
-                    <div class="p-4">
-                        <h3 class="font-bold text-xl mb-2">Fortalecimento Muscular</h3>
-                        <p class="text-gray-600">Usando o peso do corpo para fortalecimento</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Video Placeholder Instructions -->
-            <div class="mt-8 bg-yellow-50 border-l-4 border-yellow-400 p-4">
-                <div class="flex">
-                    <div class="flex-shrink-0">
-                        <i class="fas fa-info-circle text-yellow-400 text-xl"></i>
-                    </div>
-                    <div class="ml-3">
-                        <p class="text-sm text-yellow-700">
-                            <strong>Nota:</strong> Substitua "VIDEO_ID_1", "VIDEO_ID_2" e "VIDEO_ID_3" pelos IDs reais dos vídeos do YouTube que deseja incorporar.
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <!-- Footer -->
-    <footer class="bg-gray-800 text-white py-12 mt-12">
-        <div class="container mx-auto px-4">
-            <div class="grid md:grid-cols-3 gap-8">
-                <div>
-                    <h3 class="text-xl font-bold mb-4">Viva Bem+</h3>
-                    <p class="text-gray-400">
-                        Soluções inovadoras para reabilitação física e motora.
-                    </p>
-                </div>
-                <div>
-                    <h4 class="font-bold mb-4">Links Rápidos</h4>
-                    <ul class="space-y-2">
-                        <li><a href="reabilitacao.html" class="text-gray-400 hover:text-white transition">Reabilitação</a></li>
-                        <li><a href="about.html" class="text-gray-400 hover:text-white transition">Sobre Nós</a></li>
-                        <li><a href="contact.html" class="text-gray-400 hover:text-white transition">Contactos</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h4 class="font-bold mb-4">Contactos</h4>
-                    <ul class="space-y-2 text-gray-400">
-                        <li class="flex items-center">
-                            <i class="fas fa-phone-alt mr-2"></i> +351 123 456 789
-                        </li>
-                        <li class="flex items-center">
-                            <i class="fas fa-envelope mr-2"></i> info@vivabem.pt
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
-                <p>&copy; 2023 Viva Bem+. Todos os direitos reservados.</p>
-            </div>
+            <a href="games/memory/index.html" class="inline-block bg-purple-600 text-white px-6 py-2 rounded-lg hover:bg-purple-700 transition">Jogar Agora</a>
+          </div>
         </div>
-    </footer>
 
-    <!-- Mobile Menu Script -->
-    <script>
-        document.getElementById('mobile-menu-button').addEventListener('click', function() {
-            const mobileMenu = document.getElementById('mobile-menu');
-            mobileMenu.classList.toggle('hidden');
-        });
-    </script>
+        <!-- Crossword -->
+        <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition">
+          <div class="h-48 bg-blue-600 flex items-center justify-center">
+            <i class="fas fa-font text-white text-6xl"></i>
+          </div>
+          <div class="p-6">
+            <h3 class="text-2xl font-bold mb-3">Palavras Cruzadas</h3>
+            <p class="text-gray-600 mb-2">
+              Exercite o vocabulário e raciocínio com desafios de palavras.
+              <br><span id="crossword-score" class="block mt-2 font-medium text-blue-700"></span>
+            </p>
+            <a href="games/crossword/index.html" class="inline-block bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition">Jogar Agora</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="text-3xl font-bold mb-8 text-center">Vídeos de Exercícios para Idosos</h2>
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Vídeos seguros -->
+        <iframe class="w-full h-64 rounded-lg shadow" src="https://www.youtube.com/embed/8BcPHWGQO44" title="Exercício para Idosos Sentados" allowfullscreen></iframe>
+        <iframe class="w-full h-64 rounded-lg shadow" src="https://www.youtube.com/embed/IH45aj2uOxI" title="Exercícios de Mobilidade Leve" allowfullscreen></iframe>
+        <iframe class="w-full h-64 rounded-lg shadow" src="https://www.youtube.com/embed/lxg4gkS-U54" title="Alongamento Simples para Idosos" allowfullscreen></iframe>
+      </div>
+    </section>
+  </main>
+
+  <footer class="bg-gray-800 text-white py-12 mt-12">
+    <div class="container mx-auto px-4 text-center">
+      <p>&copy; Viva Bem+. Todos os direitos reservados.</p>
+    </div>
+  </footer>
+
+  <!-- Firebase -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
+    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBMwJEeBE1tfT-wVPJ8c2lSlEmuqYEuqnY",
+      authDomain: "projeto-final-de-curso-425a9.firebaseapp.com",
+      projectId: "projeto-final-de-curso-425a9",
+      storageBucket: "projeto-final-de-curso-425a9.appspot.com",
+      messagingSenderId: "475780755633",
+      appId: "1:475780755633:web:6dbf97c6b394134e91f290"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    const authLink = document.getElementById('auth-link');
+    const logoutBtn = document.getElementById('logout-btn');
+
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        const userDoc = await getDoc(doc(db, "users", user.uid));
+        const role = userDoc.exists() ? userDoc.data().role : "paciente";
+        authLink.innerHTML = role === "profissional" ? '<i class="fas fa-user-md mr-2"></i> Área do Profissional' : '<i class="fas fa-user mr-2"></i> Área do Paciente';
+        authLink.href = role === "profissional" ? "dashboardprofissional.html" : "dashboardpaciente.html";
+        logoutBtn.classList.remove("hidden");
+
+        // Load scores
+        const personalScore = await getDoc(doc(db, "user_scores", user.uid));
+        const memoryScore = personalScore.exists() && personalScore.data().memory ? personalScore.data().memory : "Sem registo";
+        const crosswordScore = personalScore.exists() && personalScore.data().crossword ? personalScore.data().crossword : "Sem registo";
+
+        document.getElementById("memory-score").textContent = `O seu recorde: ${memoryScore}`;
+        document.getElementById("crossword-score").textContent = `O seu recorde: ${crosswordScore}`;
+      } else {
+        authLink.textContent = "Entrar";
+        authLink.href = "login1.html";
+        logoutBtn.classList.add("hidden");
+      }
+
+      // Load global high scores
+      const memoryGlobal = await getDoc(doc(db, "game_high_scores", "memory"));
+      const crosswordGlobal = await getDoc(doc(db, "game_high_scores", "crossword"));
+
+      const memoryVal = memoryGlobal.exists() ? memoryGlobal.data().score : "---";
+      const crosswordVal = crosswordGlobal.exists() ? crosswordGlobal.data().score : "---";
+
+      document.getElementById("memory-score").textContent += ` | Global: ${memoryVal}`;
+      document.getElementById("crossword-score").textContent += ` | Global: ${crosswordVal}`;
+    });
+
+    logoutBtn.addEventListener("click", async () => {
+      await signOut(auth);
+      window.location.href = "index.html";
+    });
+  </script>
 </body>
 </html>

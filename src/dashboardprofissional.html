@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="pt">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Dashboard Profissional</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet" />
@@ -15,10 +15,18 @@
         <h2 class="text-2xl font-bold">Viva Bem+</h2>
       </div>
       <nav class="space-y-4">
-        <a href="#" class="flex items-center space-x-2 p-2 rounded hover:bg-purple-700"><i class="fas fa-home"></i><span>Dashboard</span></a>
-        <a href="#" class="flex items-center space-x-2 p-2 rounded hover:bg-purple-700"><i class="fas fa-users"></i><span>Pacientes</span></a>
-        <a href="#" class="flex items-center space-x-2 p-2 rounded hover:bg-purple-700"><i class="fas fa-calendar-check"></i><span>Consultas</span></a>
-        <a href="#" id="logoutLink" class="flex items-center space-x-2 p-2 rounded hover:bg-purple-700"><i class="fas fa-sign-out-alt"></i><span>Sair</span></a>
+        <a href="/src/dashboardprofissional.html" class="flex items-center space-x-2 p-2 rounded hover:bg-purple-700">
+          <i class="fas fa-home"></i><span>Dashboard</span>
+        </a>
+        <a href="/src/gerir-consultas.html" class="flex items-center space-x-2 p-2 rounded hover:bg-purple-700">
+          <i class="fas fa-calendar-check"></i><span>Consultas</span>
+        </a>
+        <div class="flex items-center space-x-2 p-2 rounded bg-gray-700 opacity-50 cursor-not-allowed" title="Funcionalidade em desenvolvimento">
+          <i class="fas fa-users"></i><span>Pacientes</span>
+        </div>
+        <a href="#" id="logoutLink" class="flex items-center space-x-2 p-2 rounded hover:bg-purple-700">
+          <i class="fas fa-sign-out-alt"></i><span>Sair</span>
+        </a>
       </nav>
     </aside>
 
@@ -26,13 +34,19 @@
     <main class="flex-1 p-6 space-y-10">
       <h1 class="text-3xl font-bold text-gray-800">Dashboard Profissional</h1>
 
-      <!-- Secção de pedidos de consulta -->
+      <!-- Pedidos Pendentes -->
       <section class="bg-white p-6 rounded shadow">
         <h2 class="text-xl font-semibold text-gray-700 mb-4">Pedidos de Consulta Pendentes</h2>
         <div id="pedidosContainer" class="space-y-4"></div>
       </section>
 
-      <!-- Secção de pesquisa por UID -->
+      <!-- Histórico -->
+      <section class="bg-white p-6 rounded shadow">
+        <h2 class="text-xl font-semibold text-gray-700 mb-4">Histórico de Pedidos Processados</h2>
+        <div id="historicoPedidosContainer" class="space-y-4"></div>
+      </section>
+
+      <!-- Pesquisa por UID -->
       <section class="bg-white p-6 rounded shadow">
         <h2 class="text-xl font-semibold text-gray-700 mb-4">Pesquisar Paciente por UID</h2>
         <div class="flex items-center mb-6 space-x-2">
@@ -46,47 +60,49 @@
     </main>
   </div>
 
-  <!-- Scripts Firebase e Funções -->
+  <!-- Modal de Rejeição -->
+  <div id="modalRejeicao" class="fixed inset-0 bg-gray-800 bg-opacity-50 hidden items-center justify-center z-50">
+    <div class="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
+      <h3 class="text-xl font-semibold mb-4">Motivo da Rejeição</h3>
+      <textarea id="motivoRejeicao" rows="4" class="w-full border border-gray-300 p-2 rounded"></textarea>
+      <div class="mt-4 flex justify-end space-x-2">
+        <button id="cancelarRejeicao" class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">Cancelar</button>
+        <button id="confirmarRejeicao" class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">Confirmar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
     import {
-      getFirestore,
-      collection,
-      getDocs,
-      query,
-      where,
-      orderBy,
-      addDoc,
-      updateDoc,
-      doc,
-      serverTimestamp
+      getFirestore, collection, getDocs, getDoc, query, where, orderBy, addDoc,
+      updateDoc, doc, serverTimestamp
     } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
     import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
 
-    const firebaseConfig = {
+    const app = initializeApp({
       apiKey: "AIzaSyBMwJEeBE1tfT-wVPJ8c2lSlEmuqYEuqnY",
       authDomain: "projeto-final-de-curso-425a9.firebaseapp.com",
       projectId: "projeto-final-de-curso-425a9"
-    };
+    });
 
-    const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
     const auth = getAuth(app);
-
     let currentProfissional = null;
+    let pedidoAtual = null;
 
-    onAuthStateChanged(auth, async user => {
-      if (!user) {
-        window.location.href = "/src/login1.html";
-        return;
-      }
+    const modal = document.getElementById("modalRejeicao");
+    const motivoRejeicao = document.getElementById("motivoRejeicao");
+
+    onAuthStateChanged(auth, user => {
+      if (!user) return window.location.href = "/src/login1.html";
       currentProfissional = user.uid;
       carregarPedidos();
     });
 
     document.getElementById("logoutLink").addEventListener("click", async () => {
-      const confirmLogout = confirm("Tem a certeza que deseja terminar a sessão?");
-      if (confirmLogout) {
+      if (confirm("Tem a certeza que deseja terminar a sessão?")) {
         await signOut(auth);
         window.location.href = "/src/login1.html";
       }
@@ -94,30 +110,30 @@
 
     async function carregarPedidos() {
       const container = document.getElementById("pedidosContainer");
+      const historicoContainer = document.getElementById("historicoPedidosContainer");
       container.innerHTML = "";
+      historicoContainer.innerHTML = "";
+
       const q = query(collection(db, "pedidosConsultas"), where("profissionalId", "==", currentProfissional));
       const snap = await getDocs(q);
-      if (snap.empty) {
-        container.innerHTML = '<p class="text-gray-500">Nenhum pedido de consulta encontrado.</p>';
-        return;
-      }
 
       snap.forEach(docSnap => {
         const pedido = docSnap.data();
-        const div = document.createElement("div");
-        div.className = "bg-gray-50 p-4 border rounded shadow";
-        div.innerHTML = `
-          <p><strong>Data:</strong> ${pedido.dataHora}</p>
-          <p><strong>Paciente:</strong> ${pedido.pacienteId}</p>
-          <p><strong>Notas:</strong> ${pedido.notas || "-"}</p>
-          <p><strong>Estado:</strong> <span class="font-semibold">${pedido.estado}</span></p>
-        `;
 
         if (pedido.estado === "pendente") {
+          const div = document.createElement("div");
+          div.className = "bg-gray-50 p-4 border rounded shadow";
+          div.innerHTML = `
+            <p><strong>Data:</strong> ${pedido.dataHora}</p>
+            <p><strong>Paciente:</strong> ${pedido.pacienteId}</p>
+            <p><strong>Notas:</strong> ${pedido.notas || "-"}</p>
+            <p><strong>Estado:</strong> <span class="font-semibold">${pedido.estado}</span></p>
+          `;
+
           const aprovarBtn = document.createElement("button");
           aprovarBtn.className = "mt-2 mr-2 bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700";
           aprovarBtn.textContent = "Aprovar";
-          aprovarBtn.addEventListener("click", async () => {
+          aprovarBtn.onclick = async () => {
             await updateDoc(doc(db, "pedidosConsultas", docSnap.id), { estado: "aprovado" });
             await addDoc(collection(db, "appointments"), {
               pacienteId: pedido.pacienteId,
@@ -128,23 +144,74 @@
               createdAt: serverTimestamp()
             });
             carregarPedidos();
-          });
+          };
+          div.appendChild(aprovarBtn);
 
           const rejeitarBtn = document.createElement("button");
           rejeitarBtn.className = "mt-2 bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700";
           rejeitarBtn.textContent = "Rejeitar";
-          rejeitarBtn.addEventListener("click", async () => {
-            await updateDoc(doc(db, "pedidosConsultas", docSnap.id), { estado: "rejeitado" });
-            carregarPedidos();
-          });
-
-          div.appendChild(aprovarBtn);
+          rejeitarBtn.onclick = () => {
+            pedidoAtual = docSnap.id;
+            motivoRejeicao.value = "";
+            modal.classList.remove("hidden");
+            modal.classList.add("flex");
+          };
           div.appendChild(rejeitarBtn);
-        }
 
-        container.appendChild(div);
+          container.appendChild(div);
+
+        } else {
+          // Histórico com nome do paciente e acordeão
+          const containerDiv = document.createElement("div");
+          containerDiv.className = "border border-gray-300 rounded overflow-hidden shadow-md";
+
+          const userRef = doc(db, "users", pedido.pacienteId);
+          getDoc(userRef).then(userSnap => {
+            const nome = userSnap.exists() ? userSnap.data().name || "Paciente" : "Desconhecido";
+            const nomeCompleto = `${nome} (${pedido.pacienteId})`;
+
+            const header = document.createElement("button");
+            header.className = "w-full text-left bg-gray-100 px-4 py-3 font-semibold hover:bg-gray-200 focus:outline-none";
+            header.innerHTML = `<span>${pedido.dataHora}</span> - <span class="font-bold">${pedido.estado.toUpperCase()}</span> - ${nome}`;
+
+            const detalhes = document.createElement("div");
+            detalhes.className = "px-4 py-2 hidden bg-white border-t border-gray-200 text-sm";
+            detalhes.innerHTML = `
+              <p><strong>Paciente:</strong> ${nomeCompleto}</p>
+              <p><strong>Notas:</strong> ${pedido.notas || "-"}</p>
+              ${pedido.estado === "rejeitado" ? `<p><strong>Motivo da Rejeição:</strong> ${pedido.motivo || "N/A"}</p>` : ""}
+            `;
+
+            header.addEventListener("click", () => {
+              detalhes.classList.toggle("hidden");
+            });
+
+            containerDiv.appendChild(header);
+            containerDiv.appendChild(detalhes);
+            historicoContainer.appendChild(containerDiv);
+          });
+        }
       });
     }
+
+    document.getElementById("cancelarRejeicao").onclick = () => {
+      modal.classList.add("hidden");
+      modal.classList.remove("flex");
+    };
+
+    document.getElementById("confirmarRejeicao").onclick = async () => {
+      const motivo = motivoRejeicao.value.trim();
+      if (!motivo || !pedidoAtual) return;
+
+      await updateDoc(doc(db, "pedidosConsultas", pedidoAtual), {
+        estado: "rejeitado",
+        motivo
+      });
+
+      modal.classList.add("hidden");
+      modal.classList.remove("flex");
+      carregarPedidos();
+    };
 
     document.getElementById("searchByUidButton").addEventListener("click", searchByUid);
     document.getElementById("searchByUid").addEventListener("keypress", e => {
@@ -165,25 +232,20 @@
       try {
         const userQuery = query(collection(db, "users"), where("authId", "==", uid));
         const userSnap = await getDocs(userQuery);
-        if (userSnap.empty) {
-          searchResult.innerHTML = `<p class="text-gray-500">Usuário não encontrado.</p>`;
-          return;
-        }
+        if (userSnap.empty) return searchResult.innerHTML = `<p class="text-gray-500">Usuário não encontrado.</p>`;
+
         const userDoc = userSnap.docs[0];
         const data = userDoc.data();
-        const name = data.name || 'Sem nome';
         const pacienteId = userDoc.id;
+        const nome = data.name || 'Sem nome';
 
-        const appQuery = query(collection(db, "appointments"),
-          where("pacienteId", "==", pacienteId),
-          where("profissionalId", "==", currentProfissional),
-          orderBy("data")
-        );
+        const appQuery = query(collection(db, "appointments"), where("pacienteId", "==", pacienteId), where("profissionalId", "==", currentProfissional), orderBy("data"));
         const snap = await getDocs(appQuery);
 
         let html = `<div class="bg-white p-4 rounded border shadow mb-4">
-          <p class="text-lg font-bold text-purple-700">${name}</p>
+          <p class="text-lg font-bold text-purple-700">${nome}</p>
           <ul class="mt-2 space-y-2">`;
+
         if (snap.empty) {
           html += `<li class="text-gray-500">Nenhuma consulta encontrada.</li>`;
         } else {
@@ -196,12 +258,19 @@
             </li>`;
           });
         }
-        html += '</ul></div>';
-        searchResult.innerHTML = html;
 
+        html += `</ul>
+          <div class="mt-4 flex flex-wrap gap-3">
+            <a href="/src/adicionar-observacao.html?uid=${pacienteId}" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">Adicionar Observação</a>
+            <a href="/src/gerir-consultas.html?uid=${pacienteId}" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded">Agendar Consulta</a>
+            <a href="/src/historico-paciente.html?uid=${pacienteId}" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded">Ver Histórico</a>
+          </div>
+        </div>`;
+
+        searchResult.innerHTML = html;
       } catch (err) {
-        searchResult.innerHTML = `<p class="text-red-500">Erro ao buscar dados.</p>`;
         console.error(err);
+        searchResult.innerHTML = `<p class="text-red-500">Erro ao buscar dados.</p>`;
       }
     }
   </script>

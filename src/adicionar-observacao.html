@@ -1,50 +1,200 @@
 <!DOCTYPE html>
 <html lang="pt">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Adicionar Observação</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gerir Consultas</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet" />
 </head>
-<body class="bg-gray-100 min-h-screen p-6">
-  <div class="max-w-2xl mx-auto">
-    <h1 class="text-2xl font-bold text-gray-800 mb-6">Adicionar Observação</h1>
-    <form id="obsForm" class="bg-white p-6 rounded shadow space-y-4">
-      <textarea id="textoObs" rows="6" placeholder="Escreva a observação..." class="w-full border rounded px-3 py-2"></textarea>
-      <button type="submit" class="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700">Guardar Observação</button>
-      <div id="msgSucesso" class="text-green-600 font-semibold hidden">Observação guardada com sucesso.</div>
-    </form>
+<body class="bg-gray-100 min-h-screen">
+  <div class="flex">
+    <!-- Sidebar -->
+    <aside class="w-64 bg-purple-800 text-white hidden md:block min-h-screen p-4">
+      <div class="mb-8">
+        <h1 class="text-2xl font-bold mb-2"><i class="fas fa-user-md mr-2"></i>Profissional</h1>
+        <nav class="space-y-2" id="sidebarLinks">
+          <!-- Os links com o UID serão injetados por JS -->
+        </nav>
+      </div>
+    </aside>
+
+    <!-- Conteúdo principal -->
+    <main class="flex-1 p-6">
+      <div class="max-w-3xl mx-auto bg-white p-6 rounded shadow">
+        <h2 class="text-2xl font-bold text-gray-800 mb-4">Gerir Consultas</h2>
+        <button onclick="abrirModalObservacao()" class="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700">Adicionar Observação</button>
+        <div id="listaObservacoes" class="mt-6 space-y-4"></div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Modal de Observação -->
+  <div id="modalObservacao" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white p-6 rounded shadow-lg w-full max-w-md">
+      <h2 class="text-xl font-bold mb-4">Adicionar Observação</h2>
+      <form id="obsForm" class="space-y-4">
+        <input type="text" id="tituloObs" placeholder="Título da observação" class="w-full border border-purple-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500">
+        <textarea id="textoObs" rows="5" placeholder="Conteúdo da observação..." class="w-full border border-purple-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500"></textarea>
+        <input type="hidden" id="observacaoId">
+        <div class="flex justify-end gap-2">
+          <button type="button" onclick="fecharModalObservacao()" class="bg-gray-400 text-white px-4 py-2 rounded">Cancelar</button>
+          <button type="submit" class="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700">Guardar</button>
+        </div>
+        <div id="msgSucesso" class="text-green-600 font-semibold hidden">Observação guardada com sucesso.</div>
+      </form>
+    </div>
   </div>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
-    import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
+    import {
+      getFirestore, collection, addDoc, serverTimestamp, query, where,
+      orderBy, getDocs, deleteDoc, doc, updateDoc
+    } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
+    import {
+      getAuth, onAuthStateChanged
+    } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyBMwJEeBE1tfT-wVPJ8c2lSlEmuqYEuqnY",
       authDomain: "projeto-final-de-curso-425a9.firebaseapp.com",
       projectId: "projeto-final-de-curso-425a9"
     };
+
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
+    const auth = getAuth(app);
 
     const params = new URLSearchParams(window.location.search);
     const uid = params.get("uid");
 
+    let currentUser = null;
+
+    const modal = document.getElementById("modalObservacao");
+    const listaObservacoes = document.getElementById("listaObservacoes");
+    const textoObs = document.getElementById("textoObs");
+    const tituloObs = document.getElementById("tituloObs");
+    const observacaoId = document.getElementById("observacaoId");
+
+    function atualizarSidebarComUID() {
+      const sidebar = document.getElementById("sidebarLinks");
+      sidebar.innerHTML = `
+        <a href="/src/dashboardprofissional.html" class="block py-2 px-3 rounded hover:bg-purple-700">
+          <i class="fas fa-home mr-2"></i>Início
+        </a>
+        <a href="/src/gerir-consultas.html?uid=${uid}" class="block py-2 px-3 rounded bg-purple-700">
+          <i class="fas fa-calendar-check mr-2"></i>Consultas
+        </a>
+        <div class="block py-2 px-3 rounded bg-gray-700 opacity-50 cursor-not-allowed" title="Em desenvolvimento">
+          <i class="fas fa-users mr-2"></i>Pacientes
+        </div>
+      `;
+    }
+
+    window.abrirModalObservacao = function (id = '', titulo = '', texto = '') {
+      tituloObs.value = titulo;
+      textoObs.value = texto;
+      observacaoId.value = id;
+      modal.classList.remove("hidden");
+    };
+
+    window.fecharModalObservacao = function () {
+      modal.classList.add("hidden");
+      document.getElementById("obsForm").reset();
+      document.getElementById("msgSucesso").classList.add("hidden");
+    };
+
     const form = document.getElementById("obsForm");
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
-      const texto = document.getElementById("textoObs").value.trim();
-      if (!texto) return;
+      const titulo = tituloObs.value.trim();
+      const texto = textoObs.value.trim();
+      if (!titulo || !texto || !uid || !currentUser) return;
 
-      await addDoc(collection(db, "observacoes"), {
-        pacienteId: uid,
-        texto: texto,
-        data: serverTimestamp()
-      });
+      try {
+        if (observacaoId.value) {
+          await updateDoc(doc(db, "observacoes", observacaoId.value), {
+            titulo: titulo,
+            texto: texto,
+            data: serverTimestamp(),
+            pacienteId: uid
+          });
+        } else {
+          await addDoc(collection(db, "observacoes"), {
+            pacienteId: uid,
+            titulo: titulo,
+            texto: texto,
+            data: serverTimestamp()
+          });
+        }
 
-      document.getElementById("msgSucesso").classList.remove("hidden");
-      form.reset();
+        document.getElementById("msgSucesso").classList.remove("hidden");
+        await carregarObservacoes();
+        setTimeout(() => fecharModalObservacao(), 2000);
+      } catch (err) {
+        console.error("Erro ao guardar observação:", err);
+        alert("Não foi possível guardar a observação.");
+      }
+    });
+
+    async function carregarObservacoes() {
+      if (!uid) return;
+      listaObservacoes.innerHTML = "<h3 class='text-lg font-semibold text-gray-700 mb-2'>Observações Anteriores</h3>";
+      try {
+        const q = query(
+          collection(db, "observacoes"),
+          where("pacienteId", "==", uid),
+          orderBy("data", "desc")
+        );
+        const querySnapshot = await getDocs(q);
+        if (querySnapshot.empty) {
+          listaObservacoes.innerHTML += "<p class='text-gray-500'>Nenhuma observação encontrada.</p>";
+          return;
+        }
+        querySnapshot.forEach((documento) => {
+          const obs = documento.data();
+          const data = obs.data?.toDate().toLocaleString("pt-PT") || "(sem data)";
+          const tituloSeguro = encodeURIComponent(obs.titulo || "");
+          const textoSeguro = encodeURIComponent(obs.texto);
+          const div = document.createElement("div");
+          div.className = "bg-gray-50 border p-4 rounded shadow-sm";
+          div.innerHTML = `
+            <p class='text-sm text-gray-600 mb-1'>${data}</p>
+            <h4 class='text-lg font-semibold text-purple-700 mb-1'>${obs.titulo}</h4>
+            <p class='mb-2'>${obs.texto}</p>
+            <div class='flex gap-2'>
+              <button onclick="abrirModalObservacao('${documento.id}', decodeURIComponent('${tituloSeguro}'), decodeURIComponent('${textoSeguro}'))" class="text-sm text-blue-600 hover:underline">Editar</button>
+              <button onclick="eliminarObservacao('${documento.id}')" class="text-sm text-red-600 hover:underline">Eliminar</button>
+            </div>
+          `;
+          listaObservacoes.appendChild(div);
+        });
+      } catch (err) {
+        console.error("Erro ao carregar observações:", err);
+      }
+    }
+
+    window.eliminarObservacao = async function (id) {
+      if (!confirm("Tem a certeza que deseja eliminar esta observação?")) return;
+      try {
+        await deleteDoc(doc(db, "observacoes", id));
+        await carregarObservacoes();
+      } catch (err) {
+        console.error("Erro ao eliminar observação:", err);
+        alert("Não foi possível eliminar a observação.");
+      }
+    };
+
+    onAuthStateChanged(auth, async user => {
+      if (!user) {
+        alert("Utilizador não autenticado. Por favor faça login.");
+        window.location.href = "/src/login1.html";
+      } else {
+        currentUser = user;
+        atualizarSidebarComUID();
+        await carregarObservacoes();
+      }
     });
   </script>
 </body>

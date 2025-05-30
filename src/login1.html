@@ -45,7 +45,7 @@
 
       <div id="errorMessage" class="text-red-600 mt-4 hidden text-center"></div>
 
-      <p class="text-center text-sm text-gray-600">Não tem conta? <a href="/src/registo.html" class="text-purple-600 hover:underline">Criar conta</a></p>
+      <p class="text-center text-sm text-gray-600">Não tem conta? <a href="/src/signup.html" class="text-purple-600 hover:underline">Criar conta</a></p>
     </div>
   </div>
 
@@ -94,6 +94,7 @@
       }
     }
 
+    // Login com email e password
     document.getElementById("loginForm").addEventListener("submit", async (e) => {
       e.preventDefault();
       errorMessage.classList.add("hidden");
@@ -111,7 +112,7 @@
         if (!userDoc.exists()) throw new Error("Conta não encontrada na base de dados.");
         const role = userDoc.data().role || "paciente";
         sessionStorage.setItem("userRole", role);
-        window.location.href = "/src/mainpage.html";
+        window.location.href = "mainpage.html";
       } catch (err) {
         showError("Erro: " + (err.message || "falha ao iniciar sessão."));
       } finally {
@@ -119,6 +120,7 @@
       }
     });
 
+    // Login com Google
     document.getElementById("googleLogin").addEventListener("click", async () => {
       errorMessage.classList.add("hidden");
       setLoading(true);
@@ -144,7 +146,7 @@
         }
 
         sessionStorage.setItem("userRole", role);
-        window.location.href = "/src/mainpage.html";
+        window.location.href = "mainpage.html";
       } catch (err) {
         showError("Erro ao entrar com Google: " + (err.message || "falha desconhecida."));
       } finally {
